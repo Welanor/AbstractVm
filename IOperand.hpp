@@ -3,17 +3,14 @@
 
 #include <string>
 
-namespace Type
-{
-  enum eOperandType
-    {
-      Int8,
-      Int16,
-      Int32,
-      Float,
-      Double
-    };
-}
+enum eOperandType
+  {
+    Int8,
+    Int16,
+    Int32,
+    Float,
+    Double
+  };
 
 class IOperand
 {

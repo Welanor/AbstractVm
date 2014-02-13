@@ -26,7 +26,7 @@ public:
   std::string const& toString() const;
 
   int getPrecision() const;
-  Type::eOperandType getType() const;
+  eOperandType getType() const;
   IOperand *operator+(const IOperand &rhs) const;
   IOperand *operator-(const IOperand &rhs) const;
   IOperand *operator*(const IOperand &rhs) const;
@@ -34,12 +34,12 @@ public:
   IOperand *operator%(const IOperand &rhs) const;
 
 private:
-  Type::eOperandType	_type;
+  eOperandType	_type;
   std::string		_val;
 };
 
 template <typename T>
-Operand<T>::Operand(const std::string &val, Type::eOperandType type)
+Operand<T>::Operand(const std::string &val, eOperandType type)
 {
   _type = type;
   _val = val;
@@ -79,7 +79,7 @@ int Operand<T>::getPrecision() const
 }
 
 template <typename T>
-Type::eOperandType Operand<T>::getType() const
+eOperandType Operand<T>::getType() const
 {
   return (_type);
 }
@@ -144,19 +144,19 @@ IOperand *Operand<T>::operator/(const IOperand &rhs) const
   return (createOperand(_type, ss.str()));
 }
 
-// template <typename T>
-// IOperand *Operand<T>::operator%(const IOperand &rhs) const
-// {
-//   std::stringstream ss(rhs.toString());
-//   T nb1;
-//   T nb2;
+template <typename T>
+IOperand *Operand<T>::operator%(const IOperand &rhs) const
+{
+  std::stringstream ss(rhs.toString());
+  T nb1;
+  T nb2;
 
-//   ss >> nb2;
-//   ss.str(_val);
-//   ss >> nb1;
-//   ss.str("");
-//   ss << nb1 % nb2;
-//   return (createOperand(_type, ss.str()));
-// }
+  ss >> nb2;
+  ss.str(_val);
+  ss >> nb1;
+  ss.str("");
+  ss << nb1 % nb2;
+  return (createOperand(_type, ss.str()));
+}
 
 #endif /* _OPERAND_HPP_ */
