@@ -2,8 +2,10 @@
 #define _OPERAND_HPP_
 
 # include <sstream>
+# include <string>
 # include <map>
 # include "IOperand.hpp"
+# include "Exception.hpp"
 
 IOperand *createOperand(eOperandType type, const std::string & value);
 
@@ -35,7 +37,7 @@ public:
 
 private:
   eOperandType	_type;
-  std::string		_val;
+  std::string	_val;
 };
 
 template <typename T>
@@ -84,17 +86,22 @@ eOperandType Operand<T>::getType() const
   return (_type);
 }
 
+#include <iostream>
+
 template <typename T>
 IOperand *Operand<T>::operator+(const IOperand &rhs) const
 {
   std::stringstream ss(rhs.toString());
+  std::stringstream ss1(_val);
   T nb1;
   T nb2;
 
+  nb1 = 0;
   ss >> nb2;
+  ss.clear();
   ss.str(_val);
   ss >> nb1;
-  ss.str("");
+  ss.clear();
   ss << (nb1 + nb2);
   return (createOperand(_type, ss.str()));
 }
@@ -107,9 +114,10 @@ IOperand *Operand<T>::operator-(const IOperand &rhs) const
   T nb2;
 
   ss >> nb2;
+  ss.clear();
   ss.str(_val);
   ss >> nb1;
-  ss.str("");
+  ss.clear();
   ss << nb1 - nb2;
   return (createOperand(_type, ss.str()));
 }
@@ -122,9 +130,10 @@ IOperand *Operand<T>::operator*(const IOperand &rhs) const
   T nb2;
 
   ss >> nb2;
+  ss.clear();
   ss.str(_val);
   ss >> nb1;
-  ss.str("");
+  ss.clear();
   ss << nb1 * nb2;
   return (createOperand(_type, ss.str()));
 }
@@ -137,9 +146,12 @@ IOperand *Operand<T>::operator/(const IOperand &rhs) const
   T nb2;
 
   ss >> nb2;
+  ss.clear();
   ss.str(_val);
   ss >> nb1;
-  ss.str("");
+  ss.clear();
+  if (nb2 == 0)
+    throw(Exception("Division by 0", "IOperand *Operand<T>::operator/, line 155"));
   ss << nb1 / nb2;
   return (createOperand(_type, ss.str()));
 }
@@ -152,9 +164,12 @@ IOperand *Operand<T>::operator%(const IOperand &rhs) const
   T nb2;
 
   ss >> nb2;
+  ss.clear();
   ss.str(_val);
   ss >> nb1;
-  ss.str("");
+  ss.clear();
+  if (nb2 == 0)
+    throw(Exception("Modulo by 0", "IOperand *Operand<T>::operator%, line 173"));
   ss << nb1 % nb2;
   return (createOperand(_type, ss.str()));
 }

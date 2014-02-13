@@ -5,11 +5,12 @@
 ## Login   <dellam_a@epitech.net>
 ##
 ## Started on  Mon Feb 10 15:22:39 2014
-## Last update Thu Feb 13 13:09:41 2014 
+## Last update Thu Feb 13 20:47:38 2014 
 ##
 
 SRC=		Operand.cpp \
 		Exception.cpp \
+		VMachine.cpp \
 		main.cpp
 
 OBJS=		$(SRC:.cpp=.o)

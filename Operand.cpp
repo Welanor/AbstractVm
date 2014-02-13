@@ -39,15 +39,13 @@ IOperand *createDouble(const std::string &value)
 }
 
 template <>
-IOperand *Operand<double>::operator%(const IOperand &rhs) const
+IOperand *Operand<double>::operator%(const IOperand &) const
 {
-  (void)rhs;
-  return (NULL);
+  throw(Exception("Can't do modulo with Double", "IOperand *Operand<double>::operator%(), line 44"));
 }
 
 template <>
-IOperand *Operand<float>::operator%(const IOperand &rhs) const
+IOperand *Operand<float>::operator%(const IOperand &) const
 {
-  (void)rhs;
-  return (NULL);
+  throw(Exception("Can't do modulo with Float", "IOperand *Operand<float>::operator%(), line 51"));
 }
