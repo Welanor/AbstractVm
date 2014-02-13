@@ -20,7 +20,7 @@ int main()
       delete nb1;
       delete nb2;
       delete result;
-      throw(Exception("toto", "tata"));
+      //throw(Exception("toto", "tata"));
     }
   catch (Exception &e)
     {
