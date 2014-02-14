@@ -1,7 +1,11 @@
 #ifndef _VMACHINE_H_
 #define _VMACHINE_H_
 
+# include <iostream>
+# include "Exception.hpp"
 # include "Memory.hpp"
+# include "IOperand.hpp"
+# include "Operand.hpp"
 
 class VMachine
 {
@@ -12,7 +16,7 @@ public:
   void run();
 
 private:
-  Memory _stack;
+  Memory<IOperand *> _stack;
 };
 
 #endif /* _VMACHINE_H_ */
