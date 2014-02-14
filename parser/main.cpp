@@ -4,7 +4,7 @@
 
 int		main(int argc, char **argv)
 {
-  Parser	o("regex_file");
+  Parser	o;
 
   o.checkInstrc();
   return (0);

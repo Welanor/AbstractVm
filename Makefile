@@ -11,7 +11,9 @@
 SRC=		Operand.cpp \
 		Exception.cpp \
 		VMachine.cpp \
+		Parser.cpp \
 		main.cpp
+
 
 OBJS=		$(SRC:.cpp=.o)
 
