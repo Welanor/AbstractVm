@@ -56,7 +56,10 @@ void	VMachine::execute(std::string const &file)
     {
       _val = inst->operand;
       if (inst->instrc == "exit")
-	return ;
+	{
+	  delete inst;
+	  return ;
+	}
       (this->*_func[inst->instrc])();
       delete inst;
     }
@@ -67,14 +70,13 @@ void VMachine::add()
   IOperand *nb1;
   IOperand *ret;
 
-  pop();
+  _val = _stack.pop();
   nb1 = _val;
-  pop();
+  _val = _stack.pop();
   ret = *_val + *nb1;
   delete _val;
   delete nb1;
-  _val = ret;
-  push();
+  _stack.push(ret);
 }
 
 void VMachine::sub()
@@ -82,14 +84,13 @@ void VMachine::sub()
   IOperand *nb1;
   IOperand *ret;
 
-  pop();
+  _val = _stack.pop();
   nb1 = _val;
-  pop();
+  _val = _stack.pop();
   ret = *_val - *nb1;
   delete _val;
   delete nb1;
-  _val = ret;
-  push();
+  _stack.push(ret);
 
 }
 
@@ -98,14 +99,13 @@ void VMachine::mul()
   IOperand *nb1;
   IOperand *ret;
 
-  pop();
+  _val = _stack.pop();
   nb1 = _val;
-  pop();
+  _val = _stack.pop();
   ret = *_val * *nb1;
   delete _val;
   delete nb1;
-  _val = ret;
-  push();
+  _stack.push(ret);
 }
 
 void VMachine::mod()
@@ -113,14 +113,13 @@ void VMachine::mod()
   IOperand *nb1;
   IOperand *ret;
 
-  pop();
+  _val = _stack.pop();
   nb1 = _val;
-  pop();
+  _val = _stack.pop();
   ret = *_val % *nb1;
   delete _val;
   delete nb1;
-  _val = ret;
-  push();
+  _stack.push(ret);
 }
 
 void VMachine::div()
@@ -128,14 +127,13 @@ void VMachine::div()
   IOperand *nb1;
   IOperand *ret;
 
-  pop();
+  _val = _stack.pop();
   nb1 = _val;
-  pop();
+  _val = _stack.pop();
   ret = *_val / *nb1;
   delete _val;
   delete nb1;
-  _val = ret;
-  push();
+  _stack.push(ret);
 }
 
 void VMachine::push()
@@ -145,12 +143,17 @@ void VMachine::push()
 
 void VMachine::pop()
 {
-  _val = _stack.pop();
+  delete _stack.pop();
 }
 
 void VMachine::dump()
 {
+  std::list<IOperand *>::iterator it;
+  std::list<IOperand *>::iterator end;
 
+  end = _stack.end();
+  for (it = _stack.begin();it != end;++it)
+    std::cout << (*it)->toString() << std::endl;
 }
 
 void VMachine::assert()
@@ -159,17 +162,17 @@ void VMachine::assert()
 
   tmp = _stack.pop();
   if (tmp->getType() != _val->getType())
-    throw(Exception("", ""));
+    throw(Exception("The type aren't the same", "void VMachine::assert(), line 161"));
   delete _val;
-  _val = tmp;
-  _stack.push(_val);
+  _stack.push(tmp);
 }
 
 void VMachine::print()
 {
+  _val = _stack.pop();
   if (_val->getType() == Int8)
     std::cout << _val->toString();
+  else
+    throw(Exception("The type must be Int8", "void VMachine::print(), line 169"));
   delete _val;
-  // else
-  //   throw(Exception("The type must be Int8", "void VMachine::print(), line "))
 }
