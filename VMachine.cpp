@@ -19,13 +19,14 @@ VMachine::~VMachine()
 
 }
 
-void VMachine::run(char *str)
+void VMachine::run(char *)
 {
   try
     {
       t_param_instrc *inst;
-      Parser parse(str);
+      Parser parse;
 
+      parse.setInput();
       while ((inst = parse.getNextInstrc())!= NULL)
 	{
 	  _val = inst->operand;
