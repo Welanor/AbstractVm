@@ -180,9 +180,9 @@ t_param_instrc			*Parser::getNextInstrc()
   iss.str(s);
   this->indexInstrc += 1;
   param = new t_param_instrc;
-  param->openrand = NULL;
+  param->operand = NULL;
   iss >> s;
-  param->instrc = new std::string(s);
+  param->instrc = s;
   iss >> s;
   beginBracket = s.find("(");
   endBracket = s.find(")");
@@ -190,7 +190,7 @@ t_param_instrc			*Parser::getNextInstrc()
     return (param);
   number = s.substr(beginBracket + 1,
 		    (endBracket - (beginBracket + 1)));
-  param->openrand = createOperand(this->getTypeArgument(s), number);
+  param->operand = createOperand(this->getTypeArgument(s), number);
   return (param);
 }
 

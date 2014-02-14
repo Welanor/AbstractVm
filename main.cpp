@@ -3,11 +3,9 @@
 
 int main(int ac, char **av)
 {
-  (void)ac;
-  (void)av;
-
   VMachine cpu;
 
-  cpu.run();
+  if (ac > 1)
+      cpu.run(av[1]);
   return (0);
 }

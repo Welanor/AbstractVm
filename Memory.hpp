@@ -31,8 +31,10 @@ Memory<T>::~Memory()
   if (!_mem.empty())
     {
       while (!_mem.empty())
-	delete _mem.front();
-	_mem.pop_front();
+	{
+	  delete _mem.front();
+	  _mem.pop_front();
+	}
     }
 }
 

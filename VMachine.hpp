@@ -4,6 +4,7 @@
 # include <iostream>
 # include <string>
 # include "Exception.hpp"
+# include "Parser.hpp"
 # include "Memory.hpp"
 # include "IOperand.hpp"
 # include "Operand.hpp"
@@ -14,7 +15,7 @@ public:
   VMachine();
   virtual ~VMachine();
 
-  void run();
+  void run(char *str);
 
 private:
   void add();
@@ -31,10 +32,10 @@ private:
 private:
 
   typedef void (VMachine::*function)();
-  std::map<std::string, function>	func;
+  std::map<std::string, function>	_func;
 
-  Memory<IOperand *>					_stack;
-  IOperand						*_val;
+  Memory<IOperand *>			_stack;
+  IOperand				*_val;
 };
 
 #endif /* _VMACHINE_H_ */
