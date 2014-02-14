@@ -236,18 +236,22 @@ void		Parser::readInstruction()
     }
 }
 
+void		Parser::setInput(std::string &file)
+{
+  this->readInstruction(file);
+  this->checkInstrc();
+}
+
+void		Parser::setInput()
+{
+  this->readInstruction();
+  this->checkInstrc();
+}
+
 Parser::Parser()
 {
   this->indexInstrc = 0;
   this->initGrammar();
-  this->readInstruction();
-}
-
-Parser::Parser(const std::string &file)
-{
-  this->indexInstrc = 0;
-  this->initGrammar();
-  this->readInstruction(file);
 }
 
 Parser::~Parser(){}

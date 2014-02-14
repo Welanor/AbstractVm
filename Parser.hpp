@@ -31,11 +31,12 @@ private:
   eOperandType			getTypeArgument(std::string &instrc);
 public:
   Parser();
-  Parser(const std::string &file);
   ~Parser();
   bool			        checkInstrc();
   void				displayInstr();
   t_param_instrc		*getNextInstrc();
+  void				setInput(std::string &file);
+  void				setInput();
 };
 
 
