@@ -31,6 +31,7 @@ Memory<T>::~Memory()
   if (!_mem.empty())
     {
       while (!_mem.empty())
+	delete _mem.front();
 	_mem.pop_front();
     }
 }
@@ -46,7 +47,11 @@ T Memory<T>::pop()
 {
   if (_mem.empty())
     throw(Exception("The Memory is empty", "T pop(), line 24"));
-  return (_mem.pop_front());
+  T ret;
+
+  ret = _mem.front();
+  _mem.pop_front();
+  return (ret);
 }
 
 template <typename T>

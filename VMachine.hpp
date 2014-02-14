@@ -29,12 +29,11 @@ private:
   void print();
 
 private:
-  Memory<IOperand *>					_stack;
 
   typedef void (VMachine::*function)();
   std::map<std::string, function>	func;
 
-
+  Memory<IOperand *>					_stack;
   IOperand						*_val;
 };
 
