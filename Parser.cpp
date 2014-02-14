@@ -33,26 +33,6 @@ void			Parser::displayInstr()
     }
 }
 
-void			Parser::readInstruction(const std::string &file)
-{
-  std::ifstream		fd(file.c_str());
-  std::istringstream	input;
-
-  if (!fd.is_open())
-    {
-      std::cout << "Error open file" << std::endl;
-      return ;
-    }
-  std::string str(std::istreambuf_iterator<char>(fd),
-	     (std::istreambuf_iterator<char>()));
-  input.str(str);
-  for (std::string line; std::getline(input, line);)
-    {
-      if (line.c_str()[0] != ';')
-	this->listInsctr.push_back(line);
-    }
-}
-
 int			Parser::numberArgInstrc(std::string &instrc)
 {
   int			index;
@@ -165,12 +145,81 @@ bool					Parser::parseGrammarType(std::string &instrc)
   return (true);
 }
 
+eOperandType				Parser::getTypeArgument(std::string &instrc)
+{
+  int					index;
+  std::vector<std::string>::iterator	it;
+  size_t				pos;
+
+  index = 0;
+  it = this->listGrammarType.begin();
+  while (it != this->listGrammarType.end())
+    {
+      pos = instrc.find(*it);
+      if (pos != std::string::npos)
+	return ((eOperandType)index);
+      ++it;
+      ++index;
+    }
+  // execption
+  return ((eOperandType)0);
+}
+
+t_param_instrc			*Parser::getNextInstrc()
+{
+  t_param_instrc		*param;
+  std::string			s;
+  std::istringstream		iss;
+  size_t			beginBracket;
+  size_t			endBracket;
+  std::string			number;
+
+  if (this->indexInstrc >= (int)this->listInsctr.size())
+    return (NULL);
+  s = this->listInsctr[this->indexInstrc];
+  iss.str(s);
+  this->indexInstrc += 1;
+  param = new t_param_instrc;
+  param->openrand = NULL;
+  iss >> s;
+  param->instrc = new std::string(s);
+  iss >> s;
+  beginBracket = s.find("(");
+  endBracket = s.find(")");
+  if (beginBracket == std::string::npos || endBracket == std::string::npos)
+    return (param);
+  number = s.substr(beginBracket + 1,
+		    (endBracket - (beginBracket + 1)));
+  param->openrand = createOperand(this->getTypeArgument(s), number);
+  return (param);
+}
+
 bool					Parser::checkInstrc()
 {
   if (this->parseGrammarInstrc() == false)
     return (false);
   std::cout << "parse ok " << std::endl;
   return (true);
+}
+
+void			Parser::readInstruction(const std::string &file)
+{
+  std::ifstream		fd(file.c_str());
+  std::istringstream	input;
+
+  if (!fd.is_open())
+    {
+      std::cout << "Error open file" << std::endl;
+      return ;
+    }
+  std::string str(std::istreambuf_iterator<char>(fd),
+	     (std::istreambuf_iterator<char>()));
+  input.str(str);
+  for (std::string line; std::getline(input, line);)
+    {
+      if (line.c_str()[0] != ';' && this->numberArgInstrc(line) != 0)
+	this->listInsctr.push_back(line);
+    }
 }
 
 void		Parser::readInstruction()
@@ -182,19 +231,21 @@ void		Parser::readInstruction()
       std::cin >> line;
       if (strcmp(line.c_str(), ";;") == 0)
 	return ;
-      if (line.c_str()[0] != ';')
+      if (line.c_str()[0] != ';' && this->numberArgInstrc(line) != 0)
 	this->listInsctr.push_back(line);
     }
 }
 
 Parser::Parser()
 {
+  this->indexInstrc = 0;
   this->initGrammar();
   this->readInstruction();
 }
 
 Parser::Parser(const std::string &file)
 {
+  this->indexInstrc = 0;
   this->initGrammar();
   this->readInstruction(file);
 }
