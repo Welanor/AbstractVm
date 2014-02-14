@@ -1,17 +1,17 @@
 #include "VMachine.hpp"
 
-VMachine::VMachine(): func(), _stack()
+VMachine::VMachine(): _func(), _stack()
 {
-  func["add"] = &VMachine::add;
-  func["sub"] = &VMachine::sub;
-  func["mul"] = &VMachine::mul;
-  func["div"] = &VMachine::div;
-  func["mod"] = &VMachine::mod;
-  func["push"] = &VMachine::push;
-  func["pop"] = &VMachine::pop;
-  func["dump"] = &VMachine::dump;
-  func["assert"] = &VMachine::assert;
-  func["print"] = &VMachine::print;
+  _func["add"] = &VMachine::add;
+  _func["sub"] = &VMachine::sub;
+  _func["mul"] = &VMachine::mul;
+  _func["div"] = &VMachine::div;
+  _func["mod"] = &VMachine::mod;
+  _func["push"] = &VMachine::push;
+  _func["pop"] = &VMachine::pop;
+  _func["dump"] = &VMachine::dump;
+  _func["assert"] = &VMachine::assert;
+  _func["print"] = &VMachine::print;
 }
 
 VMachine::~VMachine()
@@ -19,41 +19,21 @@ VMachine::~VMachine()
 
 }
 
-void VMachine::run()
+void VMachine::run(char *str)
 {
   try
     {
-      IOperand *nb1;
-      IOperand *nb2;
-      IOperand *result;
+      t_param_instrc *inst;
+      Parser parse(str);
 
-      nb1 = createOperand(Int8, "32");
-      nb2 = createOperand(Int8, "12");
-
-      result = *nb1 + *nb2;
-      std::cout << "Result = " << result->toString() << std::endl;
-      delete nb1;
-      delete nb2;
-      delete result;
-
-      nb1 = createOperand(Int32, "10");
-      nb2 = createOperand(Int32, "10");
-
-      result = *nb1 + *nb2;
-      std::cout << "Result = " << result->toString() << std::endl;
-      delete nb1;
-      delete nb2;
-      delete result;
-
-      // nb1 = createOperand(Float, "32.45");
-      // nb2 = createOperand(Float, "12.61");
-
-      // std::cout << "NB1 -> " << nb1->toString() << std::endl;
-      // std::cout << "NB2 -> " << nb2->toString() << std::endl;
-
-      // result = *nb1 % *nb2;
-
-      //throw(Exception("toto", "tata"));
+      while ((inst = parse.getNextInstrc())!= NULL)
+	{
+	  _val = inst->operand;
+	  if (inst->instrc == "exit")
+	    return ;
+	  (this->*_func[inst->instrc])();
+	  delete inst;
+	}
     }
   catch (Exception &e)
     {

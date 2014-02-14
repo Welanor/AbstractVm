@@ -10,8 +10,8 @@
 
 typedef struct			s_param_instrc
 {
-  std::string			*instrc;
-  IOperand			*openrand;
+  std::string			instrc;
+  IOperand			*operand;
 }				t_param_instrc;
 
 class				Parser
