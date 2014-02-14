@@ -34,7 +34,6 @@ public:
   Parser();
   ~Parser();
   bool			        checkInstrc();
-  void				displayInstr();
   t_param_instrc		*getNextInstrc();
   void				setInput(std::string const &file);
   void				setInput();

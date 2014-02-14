@@ -21,18 +21,6 @@ void		Parser::initGrammar()
   this->listGrammarType.push_back("double");
 }
 
-void			Parser::displayInstr()
-{
-  std::vector<std::string>::iterator	it;
-
-  it = this->listInsctr.begin();
-  while (it != this->listInsctr.end())
-    {
-      std::cout << *it << std::endl;
-      it++;
-    }
-}
-
 int			Parser::numberArgInstrc(std::string &instrc)
 {
   int			index;
@@ -58,7 +46,6 @@ bool					Parser::parseGrammarInstrc()
       isInstrc = false;
       itInstrc = this->listGrammarInsctr.begin();
       std::string t = *it;
-      std::cout << *it << std::endl;
       while (isInstrc == false && itInstrc != this->listGrammarInsctr.end())
 	{
 	  pos = ((std::string)*it).find(*itInstrc);
@@ -197,7 +184,6 @@ bool					Parser::checkInstrc()
 		      "checkInstrc, line 194"));
       return (false);
     }
-  std::cout << "parse ok " << std::endl;
   return (true);
 }
 
