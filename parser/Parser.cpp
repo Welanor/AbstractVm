@@ -87,7 +87,8 @@ bool					Parser::parseGrammarInstrc()
 	      if (strcmp(((std::string)*itInstrc).c_str(), "push") == 0 ||
 		  strcmp(((std::string)*itInstrc).c_str(), "assert") == 0)
 		{
-		  if (this->numberArgInstrc(*it) != 2)
+		  if (this->numberArgInstrc(*it) != 2 ||
+		      this->parseGrammarType(*it) == false)
 		    {
 		      std::cout << "1Error argument [" << *it << "]" << std::endl;
 		      exit(1);
@@ -112,16 +113,61 @@ bool					Parser::parseGrammarInstrc()
   return (true);
 }
 
-
-
-bool					Parser::parseGrammarType()
+bool			Parser::checkFormatArguement(std::string &instrc)
 {
+  size_t		beginBracket;
+  size_t		endBracket;
+  std::string		number;
+  int			index;
+
+  beginBracket = instrc.find("(");
+  endBracket = instrc.find(")");
+  if (beginBracket == std::string::npos || endBracket == std::string::npos)
+    return (false);
+  number = instrc.substr(beginBracket + 1,
+			 (endBracket - (beginBracket + 1)));
+  index = 0;
+  while (number.c_str()[index] != '\0')
+    {
+      if ((number.c_str()[index] < '0' || number.c_str()[index] > '9') &&
+	  number.c_str()[index] != '.')
+	return (false);
+      index += 1;
+    }
+  return (true);
+}
+
+bool					Parser::parseGrammarType(std::string &instrc)
+{
+  std::vector<std::string>::iterator	it;
+  size_t				pos;
+
+  it = this->listGrammarType.begin();
+  if (this->checkFormatArguement(instrc) == false)
+    return (false);
+  while (it != this->listGrammarType.end())
+    {
+      pos = instrc.find(*it);
+      if (pos != std::string::npos)
+	{
+	  if (strcmp(((std::string)*it).c_str(), "int8") == 0 ||
+	      strcmp(((std::string)*it).c_str(), "int16") == 0 ||
+	      strcmp(((std::string)*it).c_str(), "int32") == 0)
+	    {
+	      pos = instrc.find(".");
+	      if (pos != std::string::npos)
+		return (false);
+	    }
+	  return (true);
+	}
+      it++;
+    }
   return (true);
 }
 
 bool					Parser::checkInstrc()
 {
-  if (this->parseGrammarInstrc() == false || this->parseGrammarType() == false)
+  if (this->parseGrammarInstrc() == false)
     return (false);
   std::cout << "parse ok " << std::endl;
   return (true);
@@ -145,14 +191,12 @@ Parser::Parser()
 {
   this->initGrammar();
   this->readInstruction();
-  this->displayInstr();
 }
 
 Parser::Parser(const std::string &file)
 {
   this->initGrammar();
   this->readInstruction(file);
-  // this->displayInstr();
 }
 
 Parser::~Parser(){}

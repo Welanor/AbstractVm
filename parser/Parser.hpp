@@ -16,15 +16,16 @@ private:
   void				readInstruction(const std::string &file);
   void				readInstruction();
   void				initGrammar();
-  void				displayInstr();
   bool				parseGrammarInstrc();
-  bool				parseGrammarType();
+  bool				parseGrammarType(std::string &instrc);
   int				numberArgInstrc(std::string &instrc);
+  bool				checkFormatArguement(std::string &instrc);
 public:
   Parser();
   Parser(const std::string &file);
   ~Parser();
   bool			        checkInstrc();
+  void				displayInstr();
 };
 
 
