@@ -1,8 +1,17 @@
 #include "VMachine.hpp"
 
-VMachine::VMachine(): _stack()
+VMachine::VMachine(): _stack(), func()
 {
-
+  func["add"] = &VMachine::add;
+  func["sub"] = &VMachine::sub;
+  func["mul"] = &VMachine::mul;
+  func["div"] = &VMachine::div;
+  func["mod"] = &VMachine::mod;
+  func["push"] = &VMachine::push;
+  func["pop"] = &VMachine::pop;
+  func["dump"] = &VMachine::dump;
+  func["assert"] = &VMachine::assert;
+  func["print"] = &VMachine::print;
 }
 
 VMachine::~VMachine()
@@ -50,4 +59,54 @@ void VMachine::run()
     {
       std::cerr << "Error: " << e.what() << " in " << e.where() << std::endl;
     }
+}
+
+void VMachine::add()
+{
+
+}
+
+void VMachine::sub()
+{
+
+}
+
+void VMachine::mul()
+{
+
+}
+
+void VMachine::mod()
+{
+
+}
+
+void VMachine::div()
+{
+
+}
+
+void VMachine::push()
+{
+
+}
+
+void VMachine::pop()
+{
+
+}
+
+void VMachine::dump()
+{
+
+}
+
+void VMachine::assert()
+{
+
+}
+
+void VMachine::print()
+{
+
 }
