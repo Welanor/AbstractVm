@@ -69,25 +69,19 @@ bool					Parser::parseGrammarInstrc()
 		{
 		  if (this->numberArgInstrc(*it) != 2 ||
 		      this->parseGrammarType(*it) == false)
-		    {
-		      std::cout << "1Error argument [" << *it << "]" << std::endl;
-		      exit(1);
-		    }
+		    throw(Exception("Error argument",
+				    "parsegrammarinstrc, line 67"));
 		}
 	      else if (this->numberArgInstrc(*it) != 1)
-		{
-		  std::cout << "Error argument [" << *it << "]" << std::endl;
-		  exit(1);
-		}
+		throw(Exception("Error argument, must have only one argument",
+				"parsegrammarinstrc, line 74"));
 	      isInstrc = true;
 	    }
 	  itInstrc++;
 	}
       if (isInstrc == false)
-	{
-	  std::cout << "Error not [" << *it << "] found" << std::endl;
-	  return (false);
-	}
+	throw(Exception("Error instruction not found",
+			"parsegrammarinstrc, line 82"));
       it++;
     }
   return (true);
@@ -161,7 +155,8 @@ eOperandType				Parser::getTypeArgument(std::string &instrc)
       ++it;
       ++index;
     }
-  // execption
+  throw(Exception("Error type not found",
+		  "getTypeArgument, line 150"));
   return ((eOperandType)0);
 }
 
@@ -197,7 +192,11 @@ t_param_instrc			*Parser::getNextInstrc()
 bool					Parser::checkInstrc()
 {
   if (this->parseGrammarInstrc() == false)
-    return (false);
+    {
+      throw(Exception("Error syntax instruction",
+		      "checkInstrc, line 194"));
+      return (false);
+    }
   std::cout << "parse ok " << std::endl;
   return (true);
 }
@@ -208,10 +207,8 @@ void			Parser::readInstruction(const std::string &file)
   std::istringstream	input;
 
   if (!fd.is_open())
-    {
-      std::cout << "Error open file" << std::endl;
-      return ;
-    }
+    throw(Exception("Error open file",
+		    "readInstruction, line 209"));
   std::string str(std::istreambuf_iterator<char>(fd),
 	     (std::istreambuf_iterator<char>()));
   input.str(str);

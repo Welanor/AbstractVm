@@ -7,6 +7,7 @@
 # include <vector>
 # include <stdlib.h>
 # include "Operand.hpp"
+# include "Exception.hpp"
 
 typedef struct			s_param_instrc
 {
