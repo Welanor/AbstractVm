@@ -56,15 +56,12 @@ void			Parser::readInstruction(const std::string &file)
 int			Parser::numberArgInstrc(std::string &instrc)
 {
   int			index;
-  std::istringstream	iss(instrc.c_str());
+  std::istringstream	iss(instrc);
   std::string		s;
 
   index = 0;
-  while (std::getline( iss, s, ' ' ))
-    {
-      if (strcmp(s.c_str(), " ") != 0)
-	index += 1;
-    }
+  while (iss >> s)
+    index += 1;
   return (index);
 }
 
@@ -86,7 +83,23 @@ bool					Parser::parseGrammarInstrc()
 	{
 	  pos = ((std::string)*it).find(*itInstrc);
 	  if (pos != std::string::npos && pos == 0)
-	    isInstrc = true;
+	    {
+	      if (strcmp(((std::string)*itInstrc).c_str(), "push") == 0 ||
+		  strcmp(((std::string)*itInstrc).c_str(), "assert") == 0)
+		{
+		  if (this->numberArgInstrc(*it) != 2)
+		    {
+		      std::cout << "1Error argument [" << *it << "]" << std::endl;
+		      exit(1);
+		    }
+		}
+	      else if (this->numberArgInstrc(*it) != 1)
+		{
+		  std::cout << "Error argument [" << *it << "]" << std::endl;
+		  exit(1);
+		}
+	      isInstrc = true;
+	    }
 	  itInstrc++;
 	}
       if (isInstrc == false)
@@ -103,14 +116,6 @@ bool					Parser::parseGrammarInstrc()
 
 bool					Parser::parseGrammarType()
 {
-  std::vector<std::string>::iterator	it;
-
-  it = this->listInsctr.begin();
-  while (it != this->listInsctr.end())
-    {
-
-      it++;
-    }
   return (true);
 }
 
@@ -118,6 +123,7 @@ bool					Parser::checkInstrc()
 {
   if (this->parseGrammarInstrc() == false || this->parseGrammarType() == false)
     return (false);
+  std::cout << "parse ok " << std::endl;
   return (true);
 }
 
@@ -146,7 +152,7 @@ Parser::Parser(const std::string &file)
 {
   this->initGrammar();
   this->readInstruction(file);
-  this->displayInstr();
+  // this->displayInstr();
 }
 
 Parser::~Parser(){}
