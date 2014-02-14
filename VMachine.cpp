@@ -19,26 +19,46 @@ VMachine::~VMachine()
 
 }
 
-void VMachine::run(char *)
+void VMachine::run(int ac, char **av)
 {
   try
     {
-      t_param_instrc *inst;
-      Parser parse;
+      std::string file;
 
-      parse.setInput();
-      while ((inst = parse.getNextInstrc())!= NULL)
+      if (ac == 0)
 	{
-	  _val = inst->operand;
-	  if (inst->instrc == "exit")
-	    return ;
-	  (this->*_func[inst->instrc])();
-	  delete inst;
+	  file = "";
+	  execute(file);
+	  return ;
+	}
+      for (int i=0;i < ac;i++)
+	{
+	  file = av[i];
+	  execute(file);
 	}
     }
   catch (Exception &e)
     {
       std::cerr << "Error: " << e.what() << " in " << e.where() << std::endl;
+    }
+}
+
+void	VMachine::execute(std::string const &file)
+{
+  t_param_instrc *inst;
+  Parser parse;
+
+  if (file != "")
+    parse.setInput(file);
+  else
+    parse.setInput();
+  while ((inst = parse.getNextInstrc())!= NULL)
+    {
+      _val = inst->operand;
+      if (inst->instrc == "exit")
+	return ;
+      (this->*_func[inst->instrc])();
+      delete inst;
     }
 }
 
@@ -149,6 +169,7 @@ void VMachine::print()
 {
   if (_val->getType() == Int8)
     std::cout << _val->toString();
+  delete _val;
   // else
   //   throw(Exception("The type must be Int8", "void VMachine::print(), line "))
 }

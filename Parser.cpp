@@ -236,7 +236,7 @@ void		Parser::readInstruction()
     }
 }
 
-void		Parser::setInput(std::string &file)
+void		Parser::setInput(std::string const &file)
 {
   this->readInstruction(file);
   this->checkInstrc();

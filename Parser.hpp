@@ -35,7 +35,7 @@ public:
   bool			        checkInstrc();
   void				displayInstr();
   t_param_instrc		*getNextInstrc();
-  void				setInput(std::string &file);
+  void				setInput(std::string const &file);
   void				setInput();
 };
 
