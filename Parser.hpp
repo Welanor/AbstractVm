@@ -9,6 +9,9 @@
 # include "Operand.hpp"
 # include "Exception.hpp"
 
+// find_first_off
+// const
+
 typedef struct			s_param_instrc
 {
   std::string			instrc;
@@ -24,7 +27,7 @@ private:
   std::vector<std::string>	listInsctr;
   void				readInstruction(const std::string &file);
   void				readInstruction();
-  void				initGrammar();
+  void				initDefaultGrammar();
   bool				parseGrammarInstrc();
   bool				parseGrammarType(std::string &instrc);
   int				numberArgInstrc(std::string &instrc);

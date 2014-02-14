@@ -1,7 +1,7 @@
 #include "Parser.hpp"
 #include <string.h>
 
-void		Parser::initGrammar()
+void		Parser::initDefaultGrammar()
 {
   this->listGrammarInsctr.push_back("push");
   this->listGrammarInsctr.push_back("pop");
@@ -184,6 +184,12 @@ bool					Parser::checkInstrc()
 		      "checkInstrc, line 194"));
       return (false);
     }
+  if ((this->listInsctr[this->listInsctr.size() - 1] == "exit") == false)
+    {
+      throw(Exception("Error exit is missing",
+		      "checkInstrc, line 194"));
+      return (false);
+    }
   return (true);
 }
 
@@ -211,7 +217,7 @@ void		Parser::readInstruction()
 
   while (1)
     {
-      std::cin >> line;
+      std::getline(std::cin, line);
       if (strcmp(line.c_str(), ";;") == 0)
 	return ;
       if (line.c_str()[0] != ';' && this->numberArgInstrc(line) != 0)
@@ -234,7 +240,7 @@ void		Parser::setInput()
 Parser::Parser()
 {
   this->indexInstrc = 0;
-  this->initGrammar();
+  this->initDefaultGrammar();
 }
 
 Parser::~Parser(){}
