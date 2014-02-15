@@ -35,6 +35,13 @@ public:
   IOperand *operator/(const IOperand &rhs) const;
   IOperand *operator%(const IOperand &rhs) const;
 
+
+  IOperand *prec_add(const IOperand &rhs) const;
+  IOperand *prec_sub(const IOperand &rhs) const;
+  IOperand *prec_mul(const IOperand &rhs) const;
+  IOperand *prec_div(const IOperand &rhs) const;
+  IOperand *prec_mod(const IOperand &rhs) const;
+
 private:
   eOperandType	_type;
   std::string	_val;
@@ -86,7 +93,80 @@ eOperandType Operand<T>::getType() const
   return (_type);
 }
 
-#include <iostream>
+template <typename T>
+IOperand *Operand<T>::prec_add(const IOperand &rhs) const
+{
+  IOperand *nb1;
+  IOperand *nb2;
+  IOperand *ret;
+
+  nb1 = createOperand(rhs.getType(), _val);
+  nb2 = createOperand(rhs.getType(), rhs.toString());
+  ret = *nb1 + *nb2;
+  delete nb1;
+  delete nb2;
+  return (ret);
+}
+
+template <typename T>
+IOperand *Operand<T>::prec_sub(const IOperand &rhs) const
+{
+  IOperand *nb1;
+  IOperand *nb2;
+  IOperand *ret;
+
+  nb1 = createOperand(rhs.getType(), _val);
+  nb2 = createOperand(rhs.getType(), rhs.toString());
+  ret = *nb1 - *nb2;
+  delete nb1;
+  delete nb2;
+  return (ret);
+}
+
+template <typename T>
+IOperand *Operand<T>::prec_mul(const IOperand &rhs) const
+{
+  IOperand *nb1;
+  IOperand *nb2;
+  IOperand *ret;
+
+  nb1 = createOperand(rhs.getType(), _val);
+  nb2 = createOperand(rhs.getType(), rhs.toString());
+  ret = *nb1 * *nb2;
+  delete nb1;
+  delete nb2;
+  return (ret);
+}
+
+template <typename T>
+IOperand *Operand<T>::prec_div(const IOperand &rhs) const
+{
+  IOperand *nb1;
+  IOperand *nb2;
+  IOperand *ret;
+
+  nb1 = createOperand(rhs.getType(), _val);
+  nb2 = createOperand(rhs.getType(), rhs.toString());
+  ret = *nb1 / *nb2;
+  delete nb1;
+  delete nb2;
+  return (ret);
+}
+
+template <typename T>
+IOperand *Operand<T>::prec_mod(const IOperand &rhs) const
+{
+  IOperand *nb1;
+  IOperand *nb2;
+  IOperand *ret;
+
+  nb1 = createOperand(rhs.getType(), _val);
+  nb2 = createOperand(rhs.getType(), rhs.toString());
+  ret = *nb1 % *nb2;
+  delete nb1;
+  delete nb2;
+  return (ret);
+}
 
 template <typename T>
 IOperand *Operand<T>::operator+(const IOperand &rhs) const
@@ -96,6 +176,8 @@ IOperand *Operand<T>::operator+(const IOperand &rhs) const
   T nb1;
   T nb2;
 
+  if (rhs.getType() > _type)
+    return (prec_add(rhs));
   nb1 = 0;
   ss >> nb2;
   ss.clear();
@@ -113,6 +195,8 @@ IOperand *Operand<T>::operator-(const IOperand &rhs) const
   T nb1;
   T nb2;
 
+  if (rhs.getType() > _type)
+    return (prec_sub(rhs));
   ss >> nb2;
   ss.clear();
   ss.str(_val);
@@ -129,6 +213,8 @@ IOperand *Operand<T>::operator*(const IOperand &rhs) const
   T nb1;
   T nb2;
 
+  if (rhs.getType() > _type)
+    return (prec_mul(rhs));
   ss >> nb2;
   ss.clear();
   ss.str(_val);
@@ -145,6 +231,8 @@ IOperand *Operand<T>::operator/(const IOperand &rhs) const
   T nb1;
   T nb2;
 
+  if (rhs.getType() > _type)
+    return (prec_div(rhs));
   ss >> nb2;
   ss.clear();
   ss.str(_val);
@@ -163,6 +251,8 @@ IOperand *Operand<T>::operator%(const IOperand &rhs) const
   T nb1;
   T nb2;
 
+  if (rhs.getType() > _type)
+    return (prec_mod(rhs));
   ss >> nb2;
   ss.clear();
   ss.str(_val);

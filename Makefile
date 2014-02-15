@@ -5,7 +5,7 @@
 ## Login   <dellam_a@epitech.net>
 ##
 ## Started on  Mon Feb 10 15:22:39 2014
-## Last update Fri Feb 14 15:47:02 2014 
+## Last update Sat Feb 15 15:44:19 2014 
 ##
 
 SRC=		Operand.cpp \
@@ -13,7 +13,6 @@ SRC=		Operand.cpp \
 		VMachine.cpp \
 		Parser.cpp \
 		main.cpp
-
 
 OBJS=		$(SRC:.cpp=.o)
 
