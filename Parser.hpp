@@ -30,8 +30,8 @@ private:
   void				initDefaultGrammar();
   bool				parseGrammarInstrc();
   bool				parseGrammarType(std::string &instrc);
-  int				numberArgInstrc(std::string &instrc);
-  bool				checkFormatArguement(std::string &instrc);
+  int				numberArgInstrc(std::string &instrc) const;
+  bool				checkFormatArguement(std::string &instrc) const;
   eOperandType			getTypeArgument(std::string &instrc);
 public:
   Parser();

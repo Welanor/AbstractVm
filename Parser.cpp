@@ -21,7 +21,7 @@ void		Parser::initDefaultGrammar()
   this->listGrammarType.push_back("double");
 }
 
-int			Parser::numberArgInstrc(std::string &instrc)
+int			Parser::numberArgInstrc(std::string &instrc) const
 {
   int			index;
   std::istringstream	iss(instrc);
@@ -57,24 +57,24 @@ bool					Parser::parseGrammarInstrc()
 		  if (this->numberArgInstrc(*it) != 2 ||
 		      this->parseGrammarType(*it) == false)
 		    throw(Exception("Error argument",
-				    __FILE__ ": line " TOSTRING(__LINE__)));
+				    "parsegrammarinstrc, line 67"));
 		}
 	      else if (this->numberArgInstrc(*it) != 1)
 		throw(Exception("Error argument, must have only one argument",
-				__FILE__ ": line " TOSTRING(__LINE__)));
+				"parsegrammarinstrc, line 74"));
 	      isInstrc = true;
 	    }
 	  itInstrc++;
 	}
       if (isInstrc == false)
 	throw(Exception("Error instruction not found",
-			__FILE__ ": line " TOSTRING(__LINE__)));
+			"parsegrammarinstrc, line 82"));
       it++;
     }
   return (true);
 }
 
-bool			Parser::checkFormatArguement(std::string &instrc)
+bool			Parser::checkFormatArguement(std::string &instrc) const
 {
   size_t		beginBracket;
   size_t		endBracket;
@@ -128,8 +128,8 @@ bool					Parser::parseGrammarType(std::string &instrc)
 
 eOperandType				Parser::getTypeArgument(std::string &instrc)
 {
-  int					index;
   std::vector<std::string>::iterator	it;
+  int					index;
   size_t				pos;
 
   index = 0;
@@ -143,7 +143,7 @@ eOperandType				Parser::getTypeArgument(std::string &instrc)
       ++index;
     }
   throw(Exception("Error type not found",
-		  __FILE__ ": line " TOSTRING(__LINE__)));
+		  "getTypeArgument, line 150"));
   return ((eOperandType)0);
 }
 
@@ -181,13 +181,13 @@ bool					Parser::checkInstrc()
   if (this->parseGrammarInstrc() == false)
     {
       throw(Exception("Error syntax instruction",
-		      __FILE__ ": line " TOSTRING(__LINE__)));
+		      "checkInstrc, line 194"));
       return (false);
     }
   if ((this->listInsctr[this->listInsctr.size() - 1] == "exit") == false)
     {
       throw(Exception("Error exit is missing",
-		      __FILE__ ": line " TOSTRING(__LINE__)));
+		      "checkInstrc, line 194"));
       return (false);
     }
   return (true);
@@ -200,7 +200,7 @@ void			Parser::readInstruction(const std::string &file)
 
   if (!fd.is_open())
     throw(Exception("Error open file",
-		    __FILE__ ": line " TOSTRING(__LINE__)));
+		    "readInstruction, line 209"));
   std::string str(std::istreambuf_iterator<char>(fd),
 	     (std::istreambuf_iterator<char>()));
   input.str(str);
