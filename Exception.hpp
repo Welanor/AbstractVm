@@ -4,6 +4,9 @@
 #include <string>
 #include <exception>
 
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
 class Exception : public std::exception
 {
 public:

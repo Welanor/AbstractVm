@@ -57,18 +57,18 @@ bool					Parser::parseGrammarInstrc()
 		  if (this->numberArgInstrc(*it) != 2 ||
 		      this->parseGrammarType(*it) == false)
 		    throw(Exception("Error argument",
-				    "parsegrammarinstrc, line 67"));
+				    __FILE__ ": line " TOSTRING(__LINE__)));
 		}
 	      else if (this->numberArgInstrc(*it) != 1)
 		throw(Exception("Error argument, must have only one argument",
-				"parsegrammarinstrc, line 74"));
+				__FILE__ ": line " TOSTRING(__LINE__)));
 	      isInstrc = true;
 	    }
 	  itInstrc++;
 	}
       if (isInstrc == false)
 	throw(Exception("Error instruction not found",
-			"parsegrammarinstrc, line 82"));
+			__FILE__ ": line " TOSTRING(__LINE__)));
       it++;
     }
   return (true);
@@ -143,7 +143,7 @@ eOperandType				Parser::getTypeArgument(std::string &instrc)
       ++index;
     }
   throw(Exception("Error type not found",
-		  "getTypeArgument, line 150"));
+		  __FILE__ ": line " TOSTRING(__LINE__)));
   return ((eOperandType)0);
 }
 
@@ -181,13 +181,13 @@ bool					Parser::checkInstrc()
   if (this->parseGrammarInstrc() == false)
     {
       throw(Exception("Error syntax instruction",
-		      "checkInstrc, line 194"));
+		      __FILE__ ": line " TOSTRING(__LINE__)));
       return (false);
     }
   if ((this->listInsctr[this->listInsctr.size() - 1] == "exit") == false)
     {
       throw(Exception("Error exit is missing",
-		      "checkInstrc, line 194"));
+		      __FILE__ ": line " TOSTRING(__LINE__)));
       return (false);
     }
   return (true);
@@ -200,7 +200,7 @@ void			Parser::readInstruction(const std::string &file)
 
   if (!fd.is_open())
     throw(Exception("Error open file",
-		    "readInstruction, line 209"));
+		    __FILE__ ": line " TOSTRING(__LINE__)));
   std::string str(std::istreambuf_iterator<char>(fd),
 	     (std::istreambuf_iterator<char>()));
   input.str(str);

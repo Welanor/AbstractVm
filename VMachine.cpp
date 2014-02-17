@@ -19,30 +19,6 @@ VMachine::~VMachine()
 
 }
 
-void VMachine::run(int ac, char **av)
-{
-  try
-    {
-      std::string file;
-
-      if (ac == 0)
-	{
-	  file = "";
-	  execute(file);
-	  return ;
-	}
-      for (int i=0;i < ac;i++)
-	{
-	  file = av[i];
-	  execute(file);
-	}
-    }
-  catch (Exception &e)
-    {
-      std::cerr << "Error: " << e.what() << " in " << e.where() << std::endl;
-    }
-}
-
 void	VMachine::execute(std::string const &file)
 {
   t_param_instrc *inst;
@@ -162,7 +138,7 @@ void VMachine::assert()
 
   tmp = _stack.pop();
   if (tmp->getType() != _val->getType())
-    throw(Exception("The type aren't the same", "void VMachine::assert(), line 161"));
+    throw(Exception("The type aren't the same", __FILE__ ": line " TOSTRING(__LINE__)));
   delete _val;
   _stack.push(tmp);
 }
@@ -173,6 +149,6 @@ void VMachine::print()
   if (_val->getType() == Int8)
     std::cout << _val->toString();
   else
-    throw(Exception("The type must be Int8", "void VMachine::print(), line 169"));
+    throw(Exception("The type must be Int8", __FILE__ ": line " TOSTRING(__LINE__)));
   delete _val;
 }

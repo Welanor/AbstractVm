@@ -15,11 +15,9 @@ public:
   VMachine();
   virtual ~VMachine();
 
-  void run(int ac, char **av);
+  void	execute(std::string const &);
 
 private:
-
-  void	execute(std::string const &);
 
   void add();
   void sub();

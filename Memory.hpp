@@ -48,7 +48,7 @@ template <typename T>
 T Memory<T>::pop()
 {
   if (_mem.empty())
-    throw(Exception("The Memory is empty", "T pop(), line 24"));
+    throw(Exception("The Memory is empty", __FILE__ ": line " TOSTRING(__LINE__)));
   T ret;
 
   ret = _mem.front();

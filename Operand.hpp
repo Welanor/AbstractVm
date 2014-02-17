@@ -239,7 +239,7 @@ IOperand *Operand<T>::operator/(const IOperand &rhs) const
   ss >> nb1;
   ss.clear();
   if (nb2 == 0)
-    throw(Exception("Division by 0", "IOperand *Operand<T>::operator/, line 155"));
+    throw(Exception("Division by 0", __FILE__ ": line " TOSTRING(__LINE__)));
   ss << nb1 / nb2;
   return (createOperand(_type, ss.str()));
 }
@@ -259,7 +259,7 @@ IOperand *Operand<T>::operator%(const IOperand &rhs) const
   ss >> nb1;
   ss.clear();
   if (nb2 == 0)
-    throw(Exception("Modulo by 0", "IOperand *Operand<T>::operator%, line 173"));
+    throw(Exception("Modulo by 0", __FILE__ ": line " TOSTRING(__LINE__)));
   ss << nb1 % nb2;
   return (createOperand(_type, ss.str()));
 }
