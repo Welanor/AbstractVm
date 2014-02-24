@@ -91,7 +91,7 @@ bool			Parser::checkFormatArguement(std::string &instrc) const
   while (number.c_str()[index] != '\0')
     {
       if ((number.c_str()[index] < '0' || number.c_str()[index] > '9') &&
-	  number.c_str()[index] != '.')
+	  number.c_str()[index] != '.' && number.c_str()[index] != '-')
 	return (false);
       index += 1;
     }
