@@ -33,6 +33,7 @@ private:
   int				numberArgInstrc(std::string &instrc) const;
   bool				checkFormatArguement(std::string &instrc) const;
   eOperandType			getTypeArgument(std::string &instrc);
+  std::string			getArgumentFormat(std::string &instrc);
 public:
   Parser();
   ~Parser();

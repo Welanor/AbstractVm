@@ -33,12 +33,32 @@ int			Parser::numberArgInstrc(std::string &instrc) const
   return (index);
 }
 
+std::string			Parser::getArgumentFormat(std::string &instrc)
+{
+  std::istringstream		stream(instrc);
+  std::string			tmp;
+  std::string			argument;
+  bool				is_arguement = false;
+
+  stream >> tmp;
+  argument += tmp;
+  while (stream >> tmp)
+    {
+      if (is_arguement == false)
+	argument += " ";
+      argument += tmp;
+      is_arguement = true;
+    }
+  return (argument);
+}
+
 bool					Parser::parseGrammarInstrc()
 {
   std::vector<std::string>::iterator	it;
   std::vector<std::string>::iterator	itInstrc;
   bool					isInstrc;
   size_t				pos;
+  std::stringstream			stream;
 
   it = this->listInsctr.begin();
   while (it != this->listInsctr.end())
@@ -48,18 +68,21 @@ bool					Parser::parseGrammarInstrc()
       std::string t = *it;
       while (isInstrc == false && itInstrc != this->listGrammarInsctr.end())
 	{
-	  pos = ((std::string)*it).find(*itInstrc);
+	  pos = t.find(*itInstrc);
 	  if (pos != std::string::npos && pos == 0)
 	    {
-	      if (strcmp(((std::string)*itInstrc).c_str(), "push") == 0 ||
-		  strcmp(((std::string)*itInstrc).c_str(), "assert") == 0)
+	      if (*itInstrc == "push" ||
+		  *itInstrc == "assert")
 		{
-		  if (this->numberArgInstrc(*it) != 2 ||
-		      this->parseGrammarType(*it) == false)
-		    throw(Exception("Error argument",
-				    "parsegrammarinstrc, line 67"));
+		  if (this->numberArgInstrc(t) != 2 ||
+		      this->parseGrammarType(t) == false)
+		    {
+		      std::cout << "Error argument  = " << t << std::endl;
+		      throw(Exception("Error argument",
+				      "parsegrammarinstrc, line 67"));
+		    }
 		}
-	      else if (this->numberArgInstrc(*it) != 1)
+	      else if (this->numberArgInstrc(t) != 1)
 		throw(Exception("Error argument, must have only one argument",
 				"parsegrammarinstrc, line 74"));
 	      isInstrc = true;
@@ -88,10 +111,10 @@ bool			Parser::checkFormatArguement(std::string &instrc) const
   number = instrc.substr(beginBracket + 1,
 			 (endBracket - (beginBracket + 1)));
   index = 0;
-  while (number.c_str()[index] != '\0')
+  while (number[index] != '\0')
     {
-      if ((number.c_str()[index] < '0' || number.c_str()[index] > '9') &&
-	  number.c_str()[index] != '.' && number.c_str()[index] != '-')
+      if ((number[index] < '0' || number[index] > '9') &&
+	  number[index] != '.' && number[index] != '-')
 	return (false);
       index += 1;
     }
@@ -111,9 +134,7 @@ bool					Parser::parseGrammarType(std::string &instrc)
       pos = instrc.find(*it);
       if (pos != std::string::npos)
 	{
-	  if (strcmp(((std::string)*it).c_str(), "int8") == 0 ||
-	      strcmp(((std::string)*it).c_str(), "int16") == 0 ||
-	      strcmp(((std::string)*it).c_str(), "int32") == 0)
+	  if (*it == "int8" || *it == "int16" || *it == "int32")
 	    {
 	      pos = instrc.find(".");
 	      if (pos != std::string::npos)
@@ -176,7 +197,7 @@ t_param_instrc			*Parser::getNextInstrc()
   return (param);
 }
 
-bool					Parser::checkInstrc()
+bool			Parser::checkInstrc()
 {
   if (this->parseGrammarInstrc() == false)
     {
@@ -206,8 +227,11 @@ void			Parser::readInstruction(const std::string &file)
   input.str(str);
   for (std::string line; std::getline(input, line);)
     {
-      if (line.c_str()[0] != ';' && this->numberArgInstrc(line) != 0)
-	this->listInsctr.push_back(line);
+      if (line[0] != ';' && this->numberArgInstrc(line) != 0)
+	{
+	  line = this->getArgumentFormat(line);
+	  this->listInsctr.push_back(line);
+	}
     }
 }
 
@@ -215,12 +239,12 @@ void		Parser::readInstruction()
 {
   std::string	line;
 
-  while (1)
+  while (true)
     {
       std::getline(std::cin, line);
-      if (strcmp(line.c_str(), ";;") == 0)
+      if (line == ";;")
 	return ;
-      if (line.c_str()[0] != ';' && this->numberArgInstrc(line) != 0)
+      if (line[0] != ';' && this->numberArgInstrc(line) != 0)
 	this->listInsctr.push_back(line);
     }
 }
