@@ -52,51 +52,6 @@ std::string			Chipset::getArgumentFormat(std::string &instrc)
   return (argument);
 }
 
-bool					Chipset::parseGrammarInstrc()
-{
-  std::vector<std::string>::iterator	it;
-  std::vector<std::string>::iterator	itInstrc;
-  bool					isInstrc;
-  size_t				pos;
-  std::stringstream			stream;
-
-  it = this->listInsctr.begin();
-  while (it != this->listInsctr.end())
-    {
-      isInstrc = false;
-      itInstrc = this->listGrammarInsctr.begin();
-      std::string t = *it;
-      while (isInstrc == false && itInstrc != this->listGrammarInsctr.end())
-	{
-	  pos = t.find(*itInstrc);
-	  if (pos != std::string::npos && pos == 0)
-	    {
-	      if (*itInstrc == "push" ||
-		  *itInstrc == "assert")
-		{
-		  if (this->numberArgInstrc(t) != 2 ||
-		      this->parseGrammarType(t) == false)
-		    {
-		      std::cout << "Error argument  = " << t << std::endl;
-		      throw(Exception("Error argument",
-				      "parsegrammarinstrc, line 67"));
-		    }
-		}
-	      else if (this->numberArgInstrc(t) != 1)
-		throw(Exception("Error argument, must have only one argument",
-				"parsegrammarinstrc, line 74"));
-	      isInstrc = true;
-	    }
-	  itInstrc++;
-	}
-      if (isInstrc == false)
-	throw(Exception("Error instruction not found",
-			"parsegrammarinstrc, line 82"));
-      it++;
-    }
-  return (true);
-}
-
 bool			Chipset::checkFormatArguement(std::string &instrc) const
 {
   size_t		beginBracket;
@@ -248,23 +203,6 @@ t_param_instrc			*Chipset::getNextInstrc()
 		    (endBracket - (beginBracket + 1)));
   param->operand = fact.createOperand(this->getTypeArgument(s), number);
   return (param);
-}
-
-bool			Chipset::checkInstrc()
-{
-  if (this->parseGrammarInstrc() == false)
-    {
-      throw(Exception("Error syntax instruction",
-		      "checkInstrc, line 194"));
-      return (false);
-    }
-  if ((this->listInsctr[this->listInsctr.size() - 1] == "exit") == false)
-    {
-      throw(Exception("Error exit is missing",
-		      "checkInstrc, line 194"));
-      return (false);
-    }
-  return (true);
 }
 
 void			Chipset::readInstruction(const std::string &file)

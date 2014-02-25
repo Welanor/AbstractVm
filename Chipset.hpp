@@ -29,7 +29,6 @@ private:
   void				readInstruction(const std::string &file);
   void				readInstruction();
   void				initDefaultGrammar();
-  bool				parseGrammarInstrc();
   bool				parseGrammarType(std::string &instrc);
   int				numberArgInstrc(std::string &instrc) const;
   bool				checkFormatArguement(std::string &instrc) const;
@@ -39,7 +38,6 @@ private:
 public:
   Chipset();
   ~Chipset();
-  bool			        checkInstrc();
   t_param_instrc		*getNextInstrc();
   void				setInput(std::string const &file);
   void				setInput();
