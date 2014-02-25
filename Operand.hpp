@@ -1,19 +1,14 @@
 #ifndef _OPERAND_HPP_
-#define _OPERAND_HPP_
+# define _OPERAND_HPP_
 
 # include <sstream>
 # include <string>
+# include <stdint.h>
 # include <map>
+# include <cmath>
 # include "IOperand.hpp"
+# include "FactoryIOperand.hpp"
 # include "Exception.hpp"
-
-IOperand *createOperand(eOperandType type, const std::string & value);
-
-IOperand *createInt8(const std::string & value);
-IOperand *createInt16(const std::string & value);
-IOperand *createInt32(const std::string & value);
-IOperand *createFloat(const std::string & value);
-IOperand *createDouble(const std::string & value);
 
 template <typename T>
 class Operand : public IOperand
@@ -96,12 +91,13 @@ eOperandType Operand<T>::getType() const
 template <typename T>
 IOperand *Operand<T>::prec_add(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   IOperand *nb1;
   IOperand *nb2;
   IOperand *ret;
 
-  nb1 = createOperand(rhs.getType(), _val);
-  nb2 = createOperand(rhs.getType(), rhs.toString());
+  nb1 = fact.createOperand(rhs.getType(), _val);
+  nb2 = fact.createOperand(rhs.getType(), rhs.toString());
   ret = *nb1 + *nb2;
   delete nb1;
   delete nb2;
@@ -111,12 +107,13 @@ IOperand *Operand<T>::prec_add(const IOperand &rhs) const
 template <typename T>
 IOperand *Operand<T>::prec_sub(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   IOperand *nb1;
   IOperand *nb2;
   IOperand *ret;
 
-  nb1 = createOperand(rhs.getType(), _val);
-  nb2 = createOperand(rhs.getType(), rhs.toString());
+  nb1 = fact.createOperand(rhs.getType(), _val);
+  nb2 = fact.createOperand(rhs.getType(), rhs.toString());
   ret = *nb1 - *nb2;
   delete nb1;
   delete nb2;
@@ -126,12 +123,13 @@ IOperand *Operand<T>::prec_sub(const IOperand &rhs) const
 template <typename T>
 IOperand *Operand<T>::prec_mul(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   IOperand *nb1;
   IOperand *nb2;
   IOperand *ret;
 
-  nb1 = createOperand(rhs.getType(), _val);
-  nb2 = createOperand(rhs.getType(), rhs.toString());
+  nb1 = fact.createOperand(rhs.getType(), _val);
+  nb2 = fact.createOperand(rhs.getType(), rhs.toString());
   ret = *nb1 * *nb2;
   delete nb1;
   delete nb2;
@@ -141,12 +139,13 @@ IOperand *Operand<T>::prec_mul(const IOperand &rhs) const
 template <typename T>
 IOperand *Operand<T>::prec_div(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   IOperand *nb1;
   IOperand *nb2;
   IOperand *ret;
 
-  nb1 = createOperand(rhs.getType(), _val);
-  nb2 = createOperand(rhs.getType(), rhs.toString());
+  nb1 = fact.createOperand(rhs.getType(), _val);
+  nb2 = fact.createOperand(rhs.getType(), rhs.toString());
   ret = *nb1 / *nb2;
   delete nb1;
   delete nb2;
@@ -156,12 +155,13 @@ IOperand *Operand<T>::prec_div(const IOperand &rhs) const
 template <typename T>
 IOperand *Operand<T>::prec_mod(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   IOperand *nb1;
   IOperand *nb2;
   IOperand *ret;
 
-  nb1 = createOperand(rhs.getType(), _val);
-  nb2 = createOperand(rhs.getType(), rhs.toString());
+  nb1 = fact.createOperand(rhs.getType(), _val);
+  nb2 = fact.createOperand(rhs.getType(), rhs.toString());
   ret = *nb1 % *nb2;
   delete nb1;
   delete nb2;
@@ -171,6 +171,7 @@ IOperand *Operand<T>::prec_mod(const IOperand &rhs) const
 template <typename T>
 IOperand *Operand<T>::operator+(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   std::stringstream ss(rhs.toString());
   std::stringstream ss1(_val);
   T nb1;
@@ -185,12 +186,15 @@ IOperand *Operand<T>::operator+(const IOperand &rhs) const
   ss >> nb1;
   ss.clear();
   ss << (nb1 + nb2);
-  return (createOperand(_type, ss.str()));
+  return (fact.createOperand(_type, ss.str()));
 }
+
+#include <iostream>
 
 template <typename T>
 IOperand *Operand<T>::operator-(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   std::stringstream ss(rhs.toString());
   T nb1;
   T nb2;
@@ -202,13 +206,19 @@ IOperand *Operand<T>::operator-(const IOperand &rhs) const
   ss.str(_val);
   ss >> nb1;
   ss.clear();
+  std::cout << (int)nb1 << " | " << (int)nb2 << std::endl;
+  if (nb1 - nb2 + nb2 > nb1)
+    throw(Exception("UnderFlow", __FILE__ ": line " TOSTRING(__LINE__)));
+  else if (nb1 - nb2 + nb2 < nb1)
+    throw(Exception("OverFlow", __FILE__ ": line " TOSTRING(__LINE__)));
   ss << nb1 - nb2;
-  return (createOperand(_type, ss.str()));
+  return (fact.createOperand(_type, ss.str()));
 }
 
 template <typename T>
 IOperand *Operand<T>::operator*(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   std::stringstream ss(rhs.toString());
   T nb1;
   T nb2;
@@ -221,12 +231,13 @@ IOperand *Operand<T>::operator*(const IOperand &rhs) const
   ss >> nb1;
   ss.clear();
   ss << nb1 * nb2;
-  return (createOperand(_type, ss.str()));
+  return (fact.createOperand(_type, ss.str()));
 }
 
 template <typename T>
 IOperand *Operand<T>::operator/(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   std::stringstream ss(rhs.toString());
   T nb1;
   T nb2;
@@ -241,12 +252,13 @@ IOperand *Operand<T>::operator/(const IOperand &rhs) const
   if (nb2 == 0)
     throw(Exception("Division by 0", __FILE__ ": line " TOSTRING(__LINE__)));
   ss << nb1 / nb2;
-  return (createOperand(_type, ss.str()));
+  return (fact.createOperand(_type, ss.str()));
 }
 
 template <typename T>
 IOperand *Operand<T>::operator%(const IOperand &rhs) const
 {
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
   std::stringstream ss(rhs.toString());
   T nb1;
   T nb2;
@@ -260,8 +272,8 @@ IOperand *Operand<T>::operator%(const IOperand &rhs) const
   ss.clear();
   if (nb2 == 0)
     throw(Exception("Modulo by 0", __FILE__ ": line " TOSTRING(__LINE__)));
-  ss << nb1 % nb2;
-  return (createOperand(_type, ss.str()));
+  ss << fmod(nb1, nb2);
+  return (fact.createOperand(_type, ss.str()));
 }
 
 #endif /* _OPERAND_HPP_ */

@@ -1,19 +1,19 @@
-#ifndef _VMACHINE_H_
-#define _VMACHINE_H_
+#ifndef _CPU_H_
+#define _CPU_H_
 
 # include <iostream>
 # include <string>
 # include "Exception.hpp"
-# include "Parser.hpp"
+# include "Chipset.hpp"
 # include "Memory.hpp"
 # include "IOperand.hpp"
 # include "Operand.hpp"
 
-class VMachine
+class Cpu
 {
 public:
-  VMachine();
-  virtual ~VMachine();
+  Cpu();
+  virtual ~Cpu();
 
   void	execute(std::string const &);
 
@@ -32,11 +32,11 @@ private:
 
 private:
 
-  typedef void (VMachine::*function)();
+  typedef void (Cpu::*function)();
   std::map<std::string, function>	_func;
 
   Memory<IOperand *>			_stack;
   IOperand				*_val;
 };
 
-#endif /* _VMACHINE_H_ */
+#endif /* _CPU_H_ */

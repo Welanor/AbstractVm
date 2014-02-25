@@ -1,7 +1,7 @@
-#include "Parser.hpp"
+#include "Chipset.hpp"
 #include <string.h>
 
-void		Parser::initDefaultGrammar()
+void		Chipset::initDefaultGrammar()
 {
   this->listGrammarInsctr.push_back("push");
   this->listGrammarInsctr.push_back("pop");
@@ -21,7 +21,7 @@ void		Parser::initDefaultGrammar()
   this->listGrammarType.push_back("double");
 }
 
-int			Parser::numberArgInstrc(std::string &instrc) const
+int			Chipset::numberArgInstrc(std::string &instrc) const
 {
   int			index;
   std::istringstream	iss(instrc);
@@ -33,7 +33,7 @@ int			Parser::numberArgInstrc(std::string &instrc) const
   return (index);
 }
 
-std::string			Parser::getArgumentFormat(std::string &instrc)
+std::string			Chipset::getArgumentFormat(std::string &instrc)
 {
   std::istringstream		stream(instrc);
   std::string			tmp;
@@ -52,7 +52,7 @@ std::string			Parser::getArgumentFormat(std::string &instrc)
   return (argument);
 }
 
-bool					Parser::parseGrammarInstrc()
+bool					Chipset::parseGrammarInstrc()
 {
   std::vector<std::string>::iterator	it;
   std::vector<std::string>::iterator	itInstrc;
@@ -97,7 +97,7 @@ bool					Parser::parseGrammarInstrc()
   return (true);
 }
 
-bool			Parser::checkFormatArguement(std::string &instrc) const
+bool			Chipset::checkFormatArguement(std::string &instrc) const
 {
   size_t		beginBracket;
   size_t		endBracket;
@@ -121,7 +121,7 @@ bool			Parser::checkFormatArguement(std::string &instrc) const
   return (true);
 }
 
-bool					Parser::parseGrammarType(std::string &instrc)
+bool					Chipset::parseGrammarType(std::string &instrc)
 {
   std::vector<std::string>::iterator	it;
   size_t				pos;
@@ -147,7 +147,7 @@ bool					Parser::parseGrammarType(std::string &instrc)
   return (true);
 }
 
-eOperandType				Parser::getTypeArgument(std::string &instrc)
+eOperandType				Chipset::getTypeArgument(std::string &instrc)
 {
   std::vector<std::string>::iterator	it;
   int					index;
@@ -168,7 +168,7 @@ eOperandType				Parser::getTypeArgument(std::string &instrc)
   return ((eOperandType)0);
 }
 
-bool					Parser::checkCurrentInstrc(std::string &instrc)
+bool					Chipset::checkCurrentInstrc(std::string &instrc)
 {
   std::vector<std::string>::iterator	itInstrc;
   bool					isInstrc;
@@ -207,7 +207,7 @@ bool					Parser::checkCurrentInstrc(std::string &instrc)
   return (true);
 }
 
-t_param_instrc			*Parser::getNextInstrc()
+t_param_instrc			*Chipset::getNextInstrc()
 {
   t_param_instrc		*param;
   std::string			s;
@@ -215,6 +215,7 @@ t_param_instrc			*Parser::getNextInstrc()
   size_t			beginBracket;
   size_t			endBracket;
   std::string			number;
+  const FactoryIOperand		&fact = FactoryIOperand::getInstance();
 
   if (this->indexInstrc >= (int)this->listInsctr.size())
     return (NULL);
@@ -234,11 +235,11 @@ t_param_instrc			*Parser::getNextInstrc()
     return (param);
   number = s.substr(beginBracket + 1,
 		    (endBracket - (beginBracket + 1)));
-  param->operand = createOperand(this->getTypeArgument(s), number);
+  param->operand = fact.createOperand(this->getTypeArgument(s), number);
   return (param);
 }
 
-bool			Parser::checkInstrc()
+bool			Chipset::checkInstrc()
 {
   if (this->parseGrammarInstrc() == false)
     {
@@ -255,7 +256,7 @@ bool			Parser::checkInstrc()
   return (true);
 }
 
-void			Parser::readInstruction(const std::string &file)
+void			Chipset::readInstruction(const std::string &file)
 {
   std::ifstream		fd(file.c_str());
   std::istringstream	input;
@@ -276,7 +277,7 @@ void			Parser::readInstruction(const std::string &file)
     }
 }
 
-void		Parser::readInstruction()
+void		Chipset::readInstruction()
 {
   std::string	line;
 
@@ -290,22 +291,22 @@ void		Parser::readInstruction()
     }
 }
 
-void		Parser::setInput(std::string const &file)
+void		Chipset::setInput(std::string const &file)
 {
   this->readInstruction(file);
   // this->checkInstrc();
 }
 
-void		Parser::setInput()
+void		Chipset::setInput()
 {
   this->readInstruction();
   // this->checkInstrc();
 }
 
-Parser::Parser()
+Chipset::Chipset()
 {
   this->indexInstrc = 0;
   this->initDefaultGrammar();
 }
 
-Parser::~Parser(){}
+Chipset::~Chipset(){}

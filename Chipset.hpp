@@ -1,5 +1,5 @@
-#ifndef PARSER_H_
-# define PARSER_H_
+#ifndef CHIPSET_H_
+# define CHIPSET_H_
 
 # include <iostream>
 # include <fstream>
@@ -8,6 +8,7 @@
 # include <stdlib.h>
 # include "Operand.hpp"
 # include "Exception.hpp"
+# include "FactoryIOperand.hpp"
 
 // find_first_off
 // const
@@ -18,7 +19,7 @@ typedef struct			s_param_instrc
   IOperand			*operand;
 }				t_param_instrc;
 
-class				Parser
+class				Chipset
 {
 private:
   int				indexInstrc;
@@ -36,8 +37,8 @@ private:
   std::string			getArgumentFormat(std::string &instrc);
   bool				checkCurrentInstrc(std::string &instrc);
 public:
-  Parser();
-  ~Parser();
+  Chipset();
+  ~Chipset();
   bool			        checkInstrc();
   t_param_instrc		*getNextInstrc();
   void				setInput(std::string const &file);

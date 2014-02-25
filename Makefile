@@ -5,13 +5,13 @@
 ## Login   <dellam_a@epitech.net>
 ##
 ## Started on  Mon Feb 10 15:22:39 2014
-## Last update Sat Feb 15 15:44:19 2014 
+## Last update Fri Feb 21 18:09:34 2014 
 ##
 
-SRC=		Operand.cpp \
+SRC=		FactoryIOperand.cpp \
 		Exception.cpp \
-		VMachine.cpp \
-		Parser.cpp \
+		Cpu.cpp \
+		Chipset.cpp \
 		main.cpp
 
 OBJS=		$(SRC:.cpp=.o)

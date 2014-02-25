@@ -1,28 +1,28 @@
-#include "VMachine.hpp"
+#include "Cpu.hpp"
 
-VMachine::VMachine(): _func(), _stack()
+Cpu::Cpu(): _func(), _stack()
 {
-  _func["add"] = &VMachine::add;
-  _func["sub"] = &VMachine::sub;
-  _func["mul"] = &VMachine::mul;
-  _func["div"] = &VMachine::div;
-  _func["mod"] = &VMachine::mod;
-  _func["push"] = &VMachine::push;
-  _func["pop"] = &VMachine::pop;
-  _func["dump"] = &VMachine::dump;
-  _func["assert"] = &VMachine::assert;
-  _func["print"] = &VMachine::print;
+  _func["add"] = &Cpu::add;
+  _func["sub"] = &Cpu::sub;
+  _func["mul"] = &Cpu::mul;
+  _func["div"] = &Cpu::div;
+  _func["mod"] = &Cpu::mod;
+  _func["push"] = &Cpu::push;
+  _func["pop"] = &Cpu::pop;
+  _func["dump"] = &Cpu::dump;
+  _func["assert"] = &Cpu::assert;
+  _func["print"] = &Cpu::print;
 }
 
-VMachine::~VMachine()
+Cpu::~Cpu()
 {
 
 }
 
-void	VMachine::execute(std::string const &file)
+void	Cpu::execute(std::string const &file)
 {
   t_param_instrc *inst;
-  Parser parse;
+  Chipset	parse;
 
   if (file != "")
     parse.setInput(file);
@@ -41,7 +41,7 @@ void	VMachine::execute(std::string const &file)
     }
 }
 
-void VMachine::add()
+void Cpu::add()
 {
   IOperand *nb1;
   IOperand *ret;
@@ -55,7 +55,7 @@ void VMachine::add()
   _stack.push(ret);
 }
 
-void VMachine::sub()
+void Cpu::sub()
 {
   IOperand *nb1;
   IOperand *ret;
@@ -70,7 +70,7 @@ void VMachine::sub()
 
 }
 
-void VMachine::mul()
+void Cpu::mul()
 {
   IOperand *nb1;
   IOperand *ret;
@@ -78,13 +78,13 @@ void VMachine::mul()
   _val = _stack.pop();
   nb1 = _val;
   _val = _stack.pop();
-  ret = *_val * *nb1;
+  ret = (*_val) * (*nb1);
   delete _val;
   delete nb1;
   _stack.push(ret);
 }
 
-void VMachine::mod()
+void Cpu::mod()
 {
   IOperand *nb1;
   IOperand *ret;
@@ -98,7 +98,7 @@ void VMachine::mod()
   _stack.push(ret);
 }
 
-void VMachine::div()
+void Cpu::div()
 {
   IOperand *nb1;
   IOperand *ret;
@@ -112,17 +112,17 @@ void VMachine::div()
   _stack.push(ret);
 }
 
-void VMachine::push()
+void Cpu::push()
 {
   _stack.push(_val);
 }
 
-void VMachine::pop()
+void Cpu::pop()
 {
   delete _stack.pop();
 }
 
-void VMachine::dump()
+void Cpu::dump()
 {
   std::list<IOperand *>::iterator it;
   std::list<IOperand *>::iterator end;
@@ -132,23 +132,29 @@ void VMachine::dump()
     std::cout << (*it)->toString() << std::endl;
 }
 
-void VMachine::assert()
+void Cpu::assert()
 {
   IOperand *tmp;
 
   tmp = _stack.pop();
   if (tmp->getType() != _val->getType())
-    throw(Exception("The type aren't the same", __FILE__ ": line " TOSTRING(__LINE__)));
+    throw(Exception("The types aren't the same", __FILE__ ": line " TOSTRING(__LINE__)));
   delete _val;
   _stack.push(tmp);
 }
 
-void VMachine::print()
+void Cpu::print()
 {
   _val = _stack.pop();
   if (_val->getType() == Int8)
-    std::cout << _val->toString();
+    {
+      int c;
+      std::stringstream ss(_val->toString());
+
+      ss >> c;
+      std::cout << static_cast<char>(c) << std::endl;
+      _stack.push(_val);
+    }
   else
     throw(Exception("The type must be Int8", __FILE__ ": line " TOSTRING(__LINE__)));
-  delete _val;
 }

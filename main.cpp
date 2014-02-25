@@ -1,9 +1,9 @@
 #include <iostream>
-#include "VMachine.hpp"
+#include "Cpu.hpp"
 
 int main(int ac, char **av)
 {
-  VMachine cpu;
+  Cpu cpu;
 
   try
     {
