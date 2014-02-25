@@ -19,10 +19,8 @@ void		Chipset::initDefaultGrammar()
   this->listGrammarInsctr.push_back("cmpne");
   this->listGrammarInsctr.push_back("cmpl");
   this->listGrammarInsctr.push_back("cmpg");
-  this->listGrammarInsctr.push_back("or");
-  this->listGrammarInsctr.push_back("xor");
-  this->listGrammarInsctr.push_back("and");
-  this->listGrammarInsctr.push_back("nand");
+  this->listGrammarInsctr.push_back("dec");
+  this->listGrammarInsctr.push_back("inc");
   this->listGrammarType.push_back("int8");
   this->listGrammarType.push_back("int16");
   this->listGrammarType.push_back("int32");
@@ -49,17 +47,29 @@ std::string			Chipset::getArgumentFormat(std::string &instrc)
   std::string			argument;
   bool				is_arguement = false;
   bool				is_jump = false;
+  bool				is_inc = false;
   size_t			pos;
+  size_t			pos2;
 
   pos = instrc.find("jump");
   if (pos != std::string::npos && pos == 0)
     is_jump = true;
+  pos = instrc.find("inc");
+  pos2 = instrc.find("dec");
+  if ((pos != std::string::npos && pos == 0) ||
+      (pos2 != std::string::npos && pos2 == 0))
+    is_inc = true;
   stream >> tmp;
   argument += tmp;
   while (stream >> tmp)
     {
       if (tmp[0] == ';')
 	return (argument);
+      if (is_inc == true)
+	{
+	  argument += "int8(1)";
+	  return (argument);
+	}
       if (is_arguement == false)
 	argument += " ";
       if (is_jump == true)
@@ -163,9 +173,9 @@ bool					Chipset::checkCurrentInstrc(std::string &instrc)
       pos = t.find(*itInstrc);
       if (pos != std::string::npos && pos == 0)
 	{
-	  if (*itInstrc == "push" ||
-	      *itInstrc == "assert" ||
-	      *itInstrc == "jump")
+	  if (*itInstrc == "push" || *itInstrc == "assert" ||
+	      *itInstrc == "jump" || *itInstrc == "inc" ||
+	      *itInstrc == "dec")
 	    {
 	      if (this->numberArgInstrc(t) != 2 ||
 		  this->parseGrammarType(t) == false)
