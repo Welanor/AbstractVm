@@ -56,20 +56,21 @@ std::string			Chipset::getArgumentFormat(std::string &instrc)
     is_jump = true;
   pos = instrc.find("inc");
   pos2 = instrc.find("dec");
+  std::cout << "OK PASS" << std::endl;
   if ((pos != std::string::npos && pos == 0) ||
       (pos2 != std::string::npos && pos2 == 0))
     is_inc = true;
   stream >> tmp;
   argument += tmp;
+  if (is_inc == true)
+    {
+      argument += " int8(1)";
+      return (argument);
+    }
   while (stream >> tmp)
     {
       if (tmp[0] == ';')
 	return (argument);
-      if (is_inc == true)
-	{
-	  argument += "int8(1)";
-	  return (argument);
-	}
       if (is_arguement == false)
 	argument += " ";
       if (is_jump == true)
@@ -165,6 +166,7 @@ bool					Chipset::checkCurrentInstrc(std::string &instrc)
   size_t				pos;
   std::stringstream			stream;
 
+  std::cout << "LINE  = " << instrc << std::endl;
   isInstrc = false;
   itInstrc = this->listGrammarInsctr.begin();
   std::string t = instrc;
