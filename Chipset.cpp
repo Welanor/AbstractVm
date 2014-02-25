@@ -86,8 +86,12 @@ bool			Chipset::checkFormatArguement(std::string &instrc) const
   while (number[index] != '\0')
     {
       if ((number[index] < '0' || number[index] > '9') &&
-	  number[index] != '.' && number[index] != '-')
-	return (false);
+	  number[index] != '.' && number[0] != '-')
+	{
+	  throw(Exception("Must be a numerical value",
+			  __FILE__ ": line " TOSTRING(__LINE__)));
+	  return (false);
+	}
       index += 1;
     }
   return (true);
@@ -162,7 +166,6 @@ bool					Chipset::checkCurrentInstrc(std::string &instrc)
 	      if (this->numberArgInstrc(t) != 2 ||
 		  this->parseGrammarType(t) == false)
 		{
-		  std::cout << "Error argument  = " << t << std::endl;
 		  throw(Exception("Error argument",
 				  __FILE__ ": line " TOSTRING(__LINE__)));
 		}
@@ -258,9 +261,12 @@ void		Chipset::readInstruction()
     }
 }
 
-void		Chipset::setIndex(const unsigned int index)
+void		Chipset::moveIndex(const int index)
 {
-  this->indexInstrc = index;
+  this->indexInstrc += index;
+  if (this->indexInstrc > this->listInsctr.size())
+    throw(Exception("Error value jump",
+		    __FILE__ ": line " TOSTRING(__LINE__)));
 }
 
 void		Chipset::setInput(std::string const &file)

@@ -41,7 +41,7 @@ public:
   t_param_instrc		*getNextInstrc();
   void				setInput(std::string const &file);
   void				setInput();
-  void				setIndex(const unsigned int index);
+  void			        moveIndex(const int index);
 };
 
 
