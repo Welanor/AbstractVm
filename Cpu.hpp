@@ -34,6 +34,12 @@ private:
   void cmpne();
   void cmpl();
   void cmpg();
+  void my_or();
+  void my_xor();
+  void my_and();
+  void nand();
+  void inc();
+  void dec();
 
 private:
 
@@ -41,6 +47,7 @@ private:
   std::map<std::string, function>	_func;
 
   Memory<IOperand *>			_stack;
+  Chipset				_parse;
   IOperand				*_val;
   bool					isJump;
 };

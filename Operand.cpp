@@ -171,7 +171,7 @@ IOperand *Operand<T>::operator-(const IOperand &rhs) const
   T nb2;
 
   if (rhs.getType() > _type)
-    return (prec_add(rhs));
+    return (prec_sub(rhs));
   nb1 = getNbr(_val);
   nb2 = getNbr(rhs.toString());
   ss << (nb1 - nb2);
@@ -187,7 +187,7 @@ IOperand *Operand<T>::operator*(const IOperand &rhs) const
   T nb2;
 
   if (rhs.getType() > _type)
-    return (prec_add(rhs));
+    return (prec_mul(rhs));
   nb1 = getNbr(_val);
   nb2 = getNbr(rhs.toString());
   ss << (nb1 * nb2);
@@ -203,7 +203,7 @@ IOperand *Operand<T>::operator/(const IOperand &rhs) const
   T nb2;
 
   if (rhs.getType() > _type)
-    return (prec_add(rhs));
+    return (prec_div(rhs));
   nb1 = getNbr(_val);
   nb2 = getNbr(rhs.toString());
   if (nb2 == 0)
@@ -221,12 +221,193 @@ IOperand *Operand<T>::operator%(const IOperand &rhs) const
   T nb2;
 
   if (rhs.getType() > _type)
-    return (prec_add(rhs));
+    return (prec_mod(rhs));
   nb1 = getNbr(_val);
   nb2 = getNbr(rhs.toString());
   if (nb2 == 0)
     throw(Exception("Modulo by 0", __FILE__ ": line " TOSTRING(__LINE__)));
-  ss << (nb1 / nb2);
+  ss << (nb1 % nb2);
+  return (fact.createOperand(_type, ss.str()));
+}
+
+template <typename T>
+bool Operand<T>::operator==(const IOperand &rhs) const
+{
+  T nb1;
+  T nb2;
+
+  if (rhs.getType() > _type)
+    {
+      const FactoryIOperand &fact = FactoryIOperand::getInstance();
+      IOperand *pnb1;
+      IOperand *pnb2;
+      bool ret;
+
+      pnb1 = fact.createOperand(rhs.getType(), _val);
+      pnb2 = fact.createOperand(rhs.getType(), rhs.toString());
+      ret = *pnb1 == *pnb2;
+      delete pnb1;
+      delete pnb2;
+      return (ret);
+    }
+  nb1 = getNbr(_val);
+  nb2 = getNbr(rhs.toString());
+  return (nb1 == nb2);
+}
+
+template <typename T>
+bool Operand<T>::operator!=(const IOperand &rhs) const
+{
+  T nb1;
+  T nb2;
+
+  if (rhs.getType() > _type)
+    {
+      const FactoryIOperand &fact = FactoryIOperand::getInstance();
+      IOperand *pnb1;
+      IOperand *pnb2;
+      bool ret;
+
+      pnb1 = fact.createOperand(rhs.getType(), _val);
+      pnb2 = fact.createOperand(rhs.getType(), rhs.toString());
+      ret = *pnb1 != *pnb2;
+      delete pnb1;
+      delete pnb2;
+      return (ret);
+    }
+  nb1 = getNbr(_val);
+  nb2 = getNbr(rhs.toString());
+  return (nb1 != nb2);
+}
+
+template <typename T>
+bool Operand<T>::operator<(const IOperand &rhs) const
+{
+  T nb1;
+  T nb2;
+
+  if (rhs.getType() > _type)
+    {
+      const FactoryIOperand &fact = FactoryIOperand::getInstance();
+      IOperand *pnb1;
+      IOperand *pnb2;
+      bool ret;
+
+      pnb1 = fact.createOperand(rhs.getType(), _val);
+      pnb2 = fact.createOperand(rhs.getType(), rhs.toString());
+      ret = *pnb1 < *pnb2;
+      delete pnb1;
+      delete pnb2;
+      return (ret);
+    }
+  nb1 = getNbr(_val);
+  nb2 = getNbr(rhs.toString());
+  return (nb1 < nb2);
+}
+
+template <typename T>
+bool Operand<T>::operator>(const IOperand &rhs) const
+{
+  T nb1;
+  T nb2;
+
+  if (rhs.getType() > _type)
+    {
+      const FactoryIOperand &fact = FactoryIOperand::getInstance();
+      IOperand *pnb1;
+      IOperand *pnb2;
+      bool ret;
+
+      pnb1 = fact.createOperand(rhs.getType(), _val);
+      pnb2 = fact.createOperand(rhs.getType(), rhs.toString());
+      ret = *pnb1 > *pnb2;
+      delete pnb1;
+      delete pnb2;
+      return (ret);
+    }
+  nb1 = getNbr(_val);
+  nb2 = getNbr(rhs.toString());
+  return (nb1 > nb2);
+}
+
+template <typename T>
+IOperand *Operand<T>::operator&(const IOperand &rhs) const
+{
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
+  std::stringstream ss("");
+  T nb1;
+  T nb2;
+
+  if (rhs.getType() > _type)
+    {
+      IOperand *pnb1;
+      IOperand *pnb2;
+      IOperand *ret;
+
+      pnb1 = fact.createOperand(rhs.getType(), _val);
+      pnb2 = fact.createOperand(rhs.getType(), rhs.toString());
+      ret = *pnb1 & *pnb2;
+      delete pnb1;
+      delete pnb2;
+      return (ret);
+    }
+  nb1 = getNbr(_val);
+  nb2 = getNbr(rhs.toString());
+  ss << (nb1 & nb2);
+  return (fact.createOperand(_type, ss.str()));
+}
+
+template <typename T>
+IOperand *Operand<T>::operator|(const IOperand &rhs) const
+{
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
+  std::stringstream ss("");
+  T nb1;
+  T nb2;
+
+  if (rhs.getType() > _type)
+    {
+      IOperand *pnb1;
+      IOperand *pnb2;
+      IOperand *ret;
+
+      pnb1 = fact.createOperand(rhs.getType(), _val);
+      pnb2 = fact.createOperand(rhs.getType(), rhs.toString());
+      ret = *pnb1 | *pnb2;
+      delete pnb1;
+      delete pnb2;
+      return (ret);
+    }
+  nb1 = getNbr(_val);
+  nb2 = getNbr(rhs.toString());
+  ss << (nb1 | nb2);
+  return (fact.createOperand(_type, ss.str()));
+}
+
+template <typename T>
+IOperand *Operand<T>::operator^(const IOperand &rhs) const
+{
+  const FactoryIOperand &fact = FactoryIOperand::getInstance();
+  std::stringstream ss("");
+  T nb1;
+  T nb2;
+
+  if (rhs.getType() > _type)
+    {
+      IOperand *pnb1;
+      IOperand *pnb2;
+      IOperand *ret;
+
+      pnb1 = fact.createOperand(rhs.getType(), _val);
+      pnb2 = fact.createOperand(rhs.getType(), rhs.toString());
+      ret = *pnb1 ^ *pnb2;
+      delete pnb1;
+      delete pnb2;
+      return (ret);
+    }
+  nb1 = getNbr(_val);
+  nb2 = getNbr(rhs.toString());
+  ss << (nb1 ^ nb2);
   return (fact.createOperand(_type, ss.str()));
 }
 
@@ -240,6 +421,48 @@ template <>
 IOperand *Operand<float>::operator%(const IOperand &) const
 {
   throw(Exception("Can't do modulo with Float", __FILE__ ": line " TOSTRING(__LINE__)));
+}
+
+template <>
+IOperand *Operand<float>::operator&(const IOperand &) const
+{
+  throw(Exception("Can't do Bitwise operation with a float",
+		  __FILE__ ": line " TOSTRING(__LINE__)));
+}
+
+template <>
+IOperand *Operand<float>::operator|(const IOperand &) const
+{
+  throw(Exception("Can't do Bitwise operation with a float",
+		  __FILE__ ": line " TOSTRING(__LINE__)));
+}
+
+template <>
+IOperand *Operand<float>::operator^(const IOperand &) const
+{
+  throw(Exception("Can't do Bitwise operation with a float",
+		  __FILE__ ": line " TOSTRING(__LINE__)));
+}
+
+template <>
+IOperand *Operand<double>::operator&(const IOperand &) const
+{
+  throw(Exception("Can't do Bitwise operation with a double",
+		  __FILE__ ": line " TOSTRING(__LINE__)));
+}
+
+template <>
+IOperand *Operand<double>::operator|(const IOperand &) const
+{
+  throw(Exception("Can't do Bitwise operation with a double",
+		  __FILE__ ": line " TOSTRING(__LINE__)));
+}
+
+template <>
+IOperand *Operand<double>::operator^(const IOperand &) const
+{
+  throw(Exception("Can't do Bitwise operation with a double",
+		  __FILE__ ": line " TOSTRING(__LINE__)));
 }
 
 template class Operand<int8_t>;

@@ -25,6 +25,15 @@ class IOperand
   virtual IOperand *operator/(const IOperand &rhs) const = 0;
   virtual IOperand *operator%(const IOperand &rhs) const = 0;
 
+  virtual bool operator==(const IOperand &rhs) const = 0;
+  virtual bool operator!=(const IOperand &rhs) const = 0;
+  virtual bool operator<(const IOperand &rhs) const = 0;
+  virtual bool operator>(const IOperand &rhs) const = 0;
+
+  virtual IOperand *operator&(const IOperand &rhs) const = 0;
+  virtual IOperand *operator|(const IOperand &rhs) const = 0;
+  virtual IOperand *operator^(const IOperand &rhs) const = 0;
+
   virtual ~IOperand() {}
 };
 

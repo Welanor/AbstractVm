@@ -30,6 +30,15 @@ public:
   IOperand *operator/(const IOperand &rhs) const;
   IOperand *operator%(const IOperand &rhs) const;
 
+  bool operator==(const IOperand &rhs) const;
+  bool operator!=(const IOperand &rhs) const;
+  bool operator<(const IOperand &rhs) const;
+  bool operator>(const IOperand &rhs) const;
+
+  IOperand *operator&(const IOperand &rhs) const;
+  IOperand *operator|(const IOperand &rhs) const;
+  IOperand *operator^(const IOperand &rhs) const;
+
   T getNbr(const std::string &str) const;
   IOperand *prec_add(const IOperand &rhs) const;
   IOperand *prec_sub(const IOperand &rhs) const;
