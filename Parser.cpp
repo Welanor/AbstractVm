@@ -168,6 +168,45 @@ eOperandType				Parser::getTypeArgument(std::string &instrc)
   return ((eOperandType)0);
 }
 
+bool					Parser::checkCurrentInstrc(std::string &instrc)
+{
+  std::vector<std::string>::iterator	itInstrc;
+  bool					isInstrc;
+  size_t				pos;
+  std::stringstream			stream;
+
+  isInstrc = false;
+  itInstrc = this->listGrammarInsctr.begin();
+  std::string t = instrc;
+  while (isInstrc == false && itInstrc != this->listGrammarInsctr.end())
+    {
+      pos = t.find(*itInstrc);
+      if (pos != std::string::npos && pos == 0)
+	{
+	  if (*itInstrc == "push" ||
+	      *itInstrc == "assert")
+	    {
+	      if (this->numberArgInstrc(t) != 2 ||
+		  this->parseGrammarType(t) == false)
+		{
+		  std::cout << "Error argument  = " << t << std::endl;
+		  throw(Exception("Error argument",
+				  "parsegrammarinstrc, line 67"));
+		}
+	    }
+	  else if (this->numberArgInstrc(t) != 1)
+	    throw(Exception("Error argument, must have only one argument",
+			    "parsegrammarinstrc, line 74"));
+	  isInstrc = true;
+	}
+      itInstrc++;
+    }
+  if (isInstrc == false)
+    throw(Exception("Error instruction not found",
+		    "parsegrammarinstrc, line 82"));
+  return (true);
+}
+
 t_param_instrc			*Parser::getNextInstrc()
 {
   t_param_instrc		*param;
@@ -180,6 +219,8 @@ t_param_instrc			*Parser::getNextInstrc()
   if (this->indexInstrc >= (int)this->listInsctr.size())
     return (NULL);
   s = this->listInsctr[this->indexInstrc];
+  if (this->checkCurrentInstrc(s) == false)
+    return (NULL);
   iss.str(s);
   this->indexInstrc += 1;
   param = new t_param_instrc;
@@ -252,13 +293,13 @@ void		Parser::readInstruction()
 void		Parser::setInput(std::string const &file)
 {
   this->readInstruction(file);
-  this->checkInstrc();
+  // this->checkInstrc();
 }
 
 void		Parser::setInput()
 {
   this->readInstruction();
-  this->checkInstrc();
+  // this->checkInstrc();
 }
 
 Parser::Parser()

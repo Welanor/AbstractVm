@@ -34,6 +34,7 @@ private:
   bool				checkFormatArguement(std::string &instrc) const;
   eOperandType			getTypeArgument(std::string &instrc);
   std::string			getArgumentFormat(std::string &instrc);
+  bool				checkCurrentInstrc(std::string &instrc);
 public:
   Parser();
   ~Parser();
