@@ -15,6 +15,10 @@ void		Chipset::initDefaultGrammar()
   this->listGrammarInsctr.push_back("print");
   this->listGrammarInsctr.push_back("exit");
   this->listGrammarInsctr.push_back("jump");
+  this->listGrammarInsctr.push_back("cmpe");
+  this->listGrammarInsctr.push_back("cmpne");
+  this->listGrammarInsctr.push_back("cmpl");
+  this->listGrammarInsctr.push_back("cmpg");
   this->listGrammarType.push_back("int8");
   this->listGrammarType.push_back("int16");
   this->listGrammarType.push_back("int32");
