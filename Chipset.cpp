@@ -14,6 +14,7 @@ void		Chipset::initDefaultGrammar()
   this->listGrammarInsctr.push_back("mod");
   this->listGrammarInsctr.push_back("print");
   this->listGrammarInsctr.push_back("exit");
+  this->listGrammarInsctr.push_back("jump");
   this->listGrammarType.push_back("int8");
   this->listGrammarType.push_back("int16");
   this->listGrammarType.push_back("int32");
@@ -39,14 +40,26 @@ std::string			Chipset::getArgumentFormat(std::string &instrc)
   std::string			tmp;
   std::string			argument;
   bool				is_arguement = false;
+  bool				is_jump = false;
+  size_t			pos;
 
+  pos = instrc.find("jump");
+  if (pos != std::string::npos && pos == 0)
+    is_jump = true;
   stream >> tmp;
   argument += tmp;
   while (stream >> tmp)
     {
+      if (tmp[0] == ';')
+	return (argument);
       if (is_arguement == false)
 	argument += " ";
+      if (is_jump == true)
+	argument += "int32(";
       argument += tmp;
+      if (is_jump == true)
+	argument += ")";
+      is_jump = false;
       is_arguement = true;
     }
   return (argument);
@@ -119,7 +132,7 @@ eOperandType				Chipset::getTypeArgument(std::string &instrc)
       ++index;
     }
   throw(Exception("Error type not found",
-		  "getTypeArgument, line 150"));
+		  __FILE__ ": line " TOSTRING(__LINE__)));
   return ((eOperandType)0);
 }
 
@@ -139,26 +152,27 @@ bool					Chipset::checkCurrentInstrc(std::string &instrc)
       if (pos != std::string::npos && pos == 0)
 	{
 	  if (*itInstrc == "push" ||
-	      *itInstrc == "assert")
+	      *itInstrc == "assert" ||
+	      *itInstrc == "jump")
 	    {
 	      if (this->numberArgInstrc(t) != 2 ||
 		  this->parseGrammarType(t) == false)
 		{
 		  std::cout << "Error argument  = " << t << std::endl;
 		  throw(Exception("Error argument",
-				  "parsegrammarinstrc, line 67"));
+				  __FILE__ ": line " TOSTRING(__LINE__)));
 		}
 	    }
 	  else if (this->numberArgInstrc(t) != 1)
 	    throw(Exception("Error argument, must have only one argument",
-			    "parsegrammarinstrc, line 74"));
+			    __FILE__ ": line " TOSTRING(__LINE__)));
 	  isInstrc = true;
 	}
       itInstrc++;
     }
   if (isInstrc == false)
     throw(Exception("Error instruction not found",
-		    "parsegrammarinstrc, line 82"));
+		    __FILE__ ": line " TOSTRING(__LINE__)));
   return (true);
 }
 
@@ -172,20 +186,20 @@ t_param_instrc			*Chipset::getNextInstrc()
   std::string			number;
   const FactoryIOperand		&fact = FactoryIOperand::getInstance();
 
-  if (this->indexInstrc >= (int)this->listInsctr.size())
+  if (this->indexInstrc >= this->listInsctr.size())
     return (NULL);
   s = this->listInsctr[this->indexInstrc];
-  if (this->indexInstrc == (int)this->listInsctr.size() - 1 &&
+  if (this->indexInstrc == this->listInsctr.size() - 1 &&
       (this->listInsctr[this->listInsctr.size() - 1] == "exit") == false)
     {
       throw(Exception("Error exit missing",
-		      "getNextInstrc, line 227"));
+		      __FILE__ ": line " TOSTRING(__LINE__)));
       return (NULL);
     }
   if (this->checkCurrentInstrc(s) == false)
     {
       throw(Exception("Error syntax",
-		      "getNextInstrc, line 233"));
+		      __FILE__ ": line " TOSTRING(__LINE__)));
       return (NULL);
     }
   iss.str(s);
@@ -212,7 +226,7 @@ void			Chipset::readInstruction(const std::string &file)
 
   if (!fd.is_open())
     throw(Exception("Error open file",
-		    "readInstruction, line 209"));
+		    __FILE__ ": line " TOSTRING(__LINE__)));
   std::string str(std::istreambuf_iterator<char>(fd),
 	     (std::istreambuf_iterator<char>()));
   input.str(str);
@@ -238,6 +252,11 @@ void		Chipset::readInstruction()
       if (line[0] != ';' && this->numberArgInstrc(line) != 0)
 	this->listInsctr.push_back(line);
     }
+}
+
+void		Chipset::setIndex(const unsigned int index)
+{
+  this->indexInstrc = index;
 }
 
 void		Chipset::setInput(std::string const &file)
