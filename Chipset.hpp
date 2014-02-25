@@ -22,14 +22,13 @@ typedef struct			s_param_instrc
 class				Chipset
 {
 private:
-  int				indexInstrc;
+  unsigned int			indexInstrc;
   std::vector<std::string>	listGrammarInsctr;
   std::vector<std::string>	listGrammarType;
   std::vector<std::string>	listInsctr;
   void				readInstruction(const std::string &file);
   void				readInstruction();
   void				initDefaultGrammar();
-  bool				parseGrammarInstrc();
   bool				parseGrammarType(std::string &instrc);
   int				numberArgInstrc(std::string &instrc) const;
   bool				checkFormatArguement(std::string &instrc) const;
@@ -39,10 +38,10 @@ private:
 public:
   Chipset();
   ~Chipset();
-  bool			        checkInstrc();
   t_param_instrc		*getNextInstrc();
   void				setInput(std::string const &file);
   void				setInput();
+  void				setIndex(const unsigned int index);
 };
 
 
