@@ -29,6 +29,11 @@ private:
   void dump();
   void assert();
   void print();
+  void jump();
+  void cmpe();
+  void cmpne();
+  void cmpl();
+  void cmpg();
 
 private:
 
@@ -37,6 +42,7 @@ private:
 
   Memory<IOperand *>			_stack;
   IOperand				*_val;
+  bool					isJump;
 };
 
 #endif /* _CPU_H_ */

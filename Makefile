@@ -5,13 +5,14 @@
 ## Login   <dellam_a@epitech.net>
 ##
 ## Started on  Mon Feb 10 15:22:39 2014
-## Last update Fri Feb 21 18:09:34 2014 
+## Last update Tue Feb 25 14:20:17 2014 
 ##
 
 SRC=		FactoryIOperand.cpp \
 		Exception.cpp \
 		Cpu.cpp \
 		Chipset.cpp \
+		Operand.cpp \
 		main.cpp
 
 OBJS=		$(SRC:.cpp=.o)

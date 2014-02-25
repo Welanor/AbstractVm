@@ -2,6 +2,7 @@
 
 Cpu::Cpu(): _func(), _stack()
 {
+  isJump = 0;
   _func["add"] = &Cpu::add;
   _func["sub"] = &Cpu::sub;
   _func["mul"] = &Cpu::mul;
@@ -12,6 +13,11 @@ Cpu::Cpu(): _func(), _stack()
   _func["dump"] = &Cpu::dump;
   _func["assert"] = &Cpu::assert;
   _func["print"] = &Cpu::print;
+  _func["jump"] = &Cpu::jump;
+  _func["cmpe"] = &Cpu::cmpe;
+  _func["cmpne"] = &Cpu::cmpne;
+  _func["cmpl"] = &Cpu::cmpl;
+  _func["cmpg"] = &Cpu::cmpg;
 }
 
 Cpu::~Cpu()
@@ -157,4 +163,29 @@ void Cpu::print()
     }
   else
     throw(Exception("The type must be Int8", __FILE__ ": line " TOSTRING(__LINE__)));
+}
+
+void Cpu::jump()
+{
+
+}
+
+void Cpu::cmpe()
+{
+
+}
+
+void Cpu::cmpne()
+{
+
+}
+
+void Cpu::cmpl()
+{
+
+}
+
+void Cpu::cmpg()
+{
+
 }
