@@ -220,8 +220,19 @@ t_param_instrc			*Chipset::getNextInstrc()
   if (this->indexInstrc >= (int)this->listInsctr.size())
     return (NULL);
   s = this->listInsctr[this->indexInstrc];
+  if (this->indexInstrc == (int)this->listInsctr.size() - 1 &&
+      (this->listInsctr[this->listInsctr.size() - 1] == "exit") == false)
+    {
+      throw(Exception("Error exit missing",
+		      "getNextInstrc, line 227"));
+      return (NULL);
+    }
   if (this->checkCurrentInstrc(s) == false)
-    return (NULL);
+    {
+      throw(Exception("Error syntax",
+		      "getNextInstrc, line 233"));
+      return (NULL);
+    }
   iss.str(s);
   this->indexInstrc += 1;
   param = new t_param_instrc;
@@ -294,13 +305,11 @@ void		Chipset::readInstruction()
 void		Chipset::setInput(std::string const &file)
 {
   this->readInstruction(file);
-  // this->checkInstrc();
 }
 
 void		Chipset::setInput()
 {
   this->readInstruction();
-  // this->checkInstrc();
 }
 
 Chipset::Chipset()
