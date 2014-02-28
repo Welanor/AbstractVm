@@ -5,6 +5,7 @@ Operand<T>::Operand(const std::string &val, eOperandType type)
 {
   _type = type;
   _val = val;
+  getNbr(val);
 }
 
 template <typename T>
@@ -133,6 +134,8 @@ T Operand<T>::getNbr(const std::string &str) const
   std::stringstream ss(str);
 
   ss >> ret;
+  if (!ss.good())
+    throw(Exception("Overflow/Underflow", __FILE__ ": line " TOSTRING(__LINE__)));
   return (ret);
 }
 
@@ -143,6 +146,8 @@ int8_t Operand<int8_t>::getNbr(const std::string &str) const
   std::stringstream ss(str);
 
   ss >> ret;
+  if (!ss.good())
+    throw(Exception("Overflow/Underflow", __FILE__ ": line " TOSTRING(__LINE__)));
   return (ret);
 }
 
