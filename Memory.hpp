@@ -13,6 +13,9 @@ public:
 
   void push(T val);
   T pop();
+  const size_t &size() const;
+  void clear();
+
   typename std::list<T>::iterator begin();
   typename std::list<T>::iterator end();
 private:
@@ -54,6 +57,25 @@ T Memory<T>::pop()
   ret = _mem.front();
   _mem.pop_front();
   return (ret);
+}
+
+template <typename T>
+const size_t &Memory<T>::size() const
+{
+  return (_mem.size());
+}
+
+template <typename T>
+void Memory<T>::clear()
+{
+  if (!_mem.empty())
+    {
+      while (!_mem.empty())
+	{
+	  delete _mem.front();
+	  _mem.pop_front();
+	}
+    }
 }
 
 template <typename T>
