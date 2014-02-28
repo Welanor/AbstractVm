@@ -259,6 +259,7 @@ void			Chipset::readInstruction(const std::string &file)
 	  this->listInsctr.push_back(line);
 	}
     }
+  fd.close();
 }
 
 void		Chipset::readInstruction()
@@ -285,11 +286,17 @@ void		Chipset::moveIndex(const int index)
 
 void		Chipset::setInput(std::string const &file)
 {
+  while (listInsctr.size())
+    listInsctr.pop_back();
+  indexInstrc = 0;
   this->readInstruction(file);
 }
 
 void		Chipset::setInput()
 {
+  while (listInsctr.size())
+    listInsctr.pop_back();
+  indexInstrc = 0;
   this->readInstruction();
 }
 
