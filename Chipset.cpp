@@ -208,15 +208,14 @@ t_param_instrc			*Chipset::getNextInstrc()
   const FactoryIOperand		&fact = FactoryIOperand::getInstance();
 
   if (this->indexInstrc >= this->listInsctr.size())
-    return (NULL);
-  s = this->listInsctr[this->indexInstrc];
-  if (this->indexInstrc == this->listInsctr.size() - 1 &&
-      (this->listInsctr[this->listInsctr.size() - 1] == "exit") == false)
     {
-      throw(Exception("Error exit missing",
-		      __FILE__ ": line " TOSTRING(__LINE__)));
+      if (this->indexInstrc == this->listInsctr.size() - 1 &&
+	  (this->listInsctr[this->listInsctr.size() - 1] == "exit") == false)
+	throw(Exception("Error exit missing",
+			__FILE__ ": line " TOSTRING(__LINE__)));
       return (NULL);
     }
+  s = this->listInsctr[this->indexInstrc];
   if (this->checkCurrentInstrc(s) == false)
     {
       throw(Exception("Error syntax",
