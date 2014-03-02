@@ -1,5 +1,6 @@
-#include "Chipset.hpp"
 #include <string.h>
+#include <algorithm>
+#include "Chipset.hpp"
 
 void		Chipset::initDefaultGrammar()
 {
@@ -85,17 +86,16 @@ std::string			Chipset::getArgumentFormat(std::string &instrc)
 
 bool			Chipset::checkFormatArguement(std::string &instrc) const
 {
-  size_t		beginBracket;
-  size_t		endBracket;
+  std::string::iterator	beginBracket;
+  std::string::iterator	endBracket;
   std::string		number;
   int			index;
 
-  beginBracket = instrc.find("(");
-  endBracket = instrc.find(")");
-  if (beginBracket == std::string::npos || endBracket == std::string::npos)
+  beginBracket = std::find(instrc.begin(), instrc.end(), '(');
+  endBracket = std::find(instrc.begin(), instrc.end(), ')');
+  if (beginBracket == instrc.end() || endBracket == instrc.end())
     return (false);
-  number = instrc.substr(beginBracket + 1,
-			 (endBracket - (beginBracket + 1)));
+  number = instrc.substr(std::distance(instrc.begin(), beginBracket+1), std::distance(beginBracket, endBracket)-1);
   index = 0;
   while (number[index] != '\0')
     {
