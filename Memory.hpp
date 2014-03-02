@@ -16,14 +16,15 @@ public:
   const size_t &size() const;
   void clear();
 
-  typename std::list<T>::iterator begin();
-  typename std::list<T>::iterator end();
+  typename std::list<T>::const_iterator begin() const;
+  typename std::list<T>::const_iterator end() const;
 private:
   std::list<T> _mem;
+  size_t       _size;
 };
 
 template <typename T>
-Memory<T>::Memory(): _mem()
+Memory<T>::Memory(): _mem(), _size(0)
 {
 
 }
@@ -45,6 +46,7 @@ template <typename T>
 void Memory<T>::push(T val)
 {
   _mem.push_front(val);
+  ++_size;
 }
 
 template <typename T>
@@ -56,13 +58,14 @@ T Memory<T>::pop()
 
   ret = _mem.front();
   _mem.pop_front();
+  --_size;
   return (ret);
 }
 
 template <typename T>
 const size_t &Memory<T>::size() const
 {
-  return (_mem.size());
+  return (_size);
 }
 
 template <typename T>
@@ -79,13 +82,13 @@ void Memory<T>::clear()
 }
 
 template <typename T>
-typename std::list<T>::iterator Memory<T>::begin()
+typename std::list<T>::const_iterator Memory<T>::begin() const
 {
   return (_mem.begin());
 }
 
 template <typename T>
-typename std::list<T>::iterator Memory<T>::end()
+typename std::list<T>::const_iterator Memory<T>::end() const
 {
   return (_mem.end());
 }

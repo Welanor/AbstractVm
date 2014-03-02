@@ -133,8 +133,7 @@ T Operand<T>::getNbr(const std::string &str) const
   T ret;
   std::stringstream ss(str);
 
-  ss >> ret;
-  if (!ss.good())
+  if (!(ss >> ret))
     throw(Exception("Overflow/Underflow", __FILE__ ": line " TOSTRING(__LINE__)));
   return (ret);
 }
@@ -145,8 +144,9 @@ int8_t Operand<int8_t>::getNbr(const std::string &str) const
   int ret;
   std::stringstream ss(str);
 
-  ss >> ret;
-  if (!ss.good())
+  ret = 0;
+  if (!(ss >> ret) || ret > std::numeric_limits<int8_t>::max()
+      || ret < std::numeric_limits<int8_t>::min())
     throw(Exception("Overflow/Underflow", __FILE__ ": line " TOSTRING(__LINE__)));
   return (ret);
 }
@@ -158,12 +158,20 @@ IOperand *Operand<T>::operator+(const IOperand &rhs) const
   std::stringstream ss("");
   T nb1;
   T nb2;
+  T min;
 
+  min = std::numeric_limits<T>::min();
+  if (std::numeric_limits<T>::has_denorm)
+    min = -std::numeric_limits<T>::max();
   if (rhs.getType() > _type)
     return (prec_add(rhs));
   nb1 = getNbr(_val);
   nb2 = getNbr(rhs.toString());
   ss << (nb1 + nb2);
+  if ((nb2 > 0) && (nb1 > std::numeric_limits<T>::max() - nb2))
+    throw(Exception("Overflow", __FILE__ ": line " TOSTRING(__LINE__)));
+  if ((nb2 < 0) && (nb1 < min - nb2))
+    throw(Exception("Underflow", __FILE__ ": line " TOSTRING(__LINE__)));
   return (fact.createOperand(_type, ss.str()));
 }
 
@@ -174,12 +182,20 @@ IOperand *Operand<T>::operator-(const IOperand &rhs) const
   std::stringstream ss("");
   T nb1;
   T nb2;
+  T min;
 
+  min = std::numeric_limits<T>::min();
+  if (std::numeric_limits<T>::has_denorm)
+    min = -std::numeric_limits<T>::max();
   if (rhs.getType() > _type)
     return (prec_sub(rhs));
   nb1 = getNbr(_val);
   nb2 = getNbr(rhs.toString());
   ss << (nb1 - nb2);
+  if ((nb2 < 0) && (nb1 > std::numeric_limits<T>::max() + nb2))
+    throw(Exception("Overflow", __FILE__ ": line " TOSTRING(__LINE__)));
+  if ((nb2 > 0) && (nb1 < min + nb2))
+    throw(Exception("Underflow", __FILE__ ": line " TOSTRING(__LINE__)));
   return (fact.createOperand(_type, ss.str()));
 }
 
@@ -190,11 +206,23 @@ IOperand *Operand<T>::operator*(const IOperand &rhs) const
   std::stringstream ss("");
   T nb1;
   T nb2;
+  T min;
 
+  min = std::numeric_limits<T>::min();
+  if (std::numeric_limits<T>::has_denorm)
+    min = -std::numeric_limits<T>::max();
   if (rhs.getType() > _type)
     return (prec_mul(rhs));
   nb1 = getNbr(_val);
   nb2 = getNbr(rhs.toString());
+  if ((nb1 > 1 && nb2 < -1) && (nb1 > min / nb2))
+    throw(Exception("Underflow", __FILE__ ": line " TOSTRING(__LINE__)));
+  if ((nb1 > 1 && nb2 > 1) && (nb1 > std::numeric_limits<T>::max() / nb2))
+    throw(Exception("Overflow", __FILE__ ": line " TOSTRING(__LINE__)));
+  if ((nb1 < -1 && nb2 > 1) && (nb1 < min / nb2))
+    throw(Exception("Underflow", __FILE__ ": line " TOSTRING(__LINE__)));
+  if ((nb1 < -1 && nb2 < -1) && (nb1 < std::numeric_limits<T>::max() / nb2))
+    throw(Exception("Overflow", __FILE__ ": line " TOSTRING(__LINE__)));
   ss << (nb1 * nb2);
   return (fact.createOperand(_type, ss.str()));
 }

@@ -6,6 +6,7 @@
 # include <stdint.h>
 # include <map>
 # include <cmath>
+# include <limits>
 # include "IOperand.hpp"
 # include "FactoryIOperand.hpp"
 # include "Exception.hpp"
