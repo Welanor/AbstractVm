@@ -1,0 +1,26 @@
+; -------------
+; exemple.avm -
+; -------------
+
+push int8(125)
+push int8(32)
+
+cmpl
+inc
+print
+jump -4
+
+push int8(10)
+print
+pop
+pop
+pop
+
+push int8(32)
+push int8(126)
+cmpg
+print
+dec
+jump -4
+
+exit

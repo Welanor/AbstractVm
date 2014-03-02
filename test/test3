@@ -1,0 +1,8 @@
+push int8(97)
+push int8(40)
+sub
+print
+push float(76)
+mul
+dump
+exit
