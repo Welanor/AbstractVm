@@ -24,20 +24,26 @@ private:
   void mul();
   void mod();
   void div();
+
   void push();
   void pop();
-  void dump();
+
+  void dump() const;
   void assert();
   void print();
+
   void jump();
+
   void cmpe();
   void cmpne();
   void cmpl();
   void cmpg();
+
   void my_or();
   void my_xor();
   void my_and();
   void nand();
+
   void inc();
   void dec();
 

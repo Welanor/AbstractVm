@@ -10,7 +10,6 @@ Cpu::Cpu(): _func(), _stack(), _parse()
   _func["mod"] = &Cpu::mod;
   _func["push"] = &Cpu::push;
   _func["pop"] = &Cpu::pop;
-  _func["dump"] = &Cpu::dump;
   _func["assert"] = &Cpu::assert;
   _func["print"] = &Cpu::print;
   _func["jump"] = &Cpu::jump;
@@ -34,6 +33,7 @@ void	Cpu::execute(std::string const &file)
 {
   t_param_instrc *inst;
 
+  _stack.clear();
   if (file != "")
     _parse.setInput(file);
   else
@@ -41,12 +41,15 @@ void	Cpu::execute(std::string const &file)
   while ((inst = _parse.getNextInstrc())!= NULL)
     {
       _val = inst->operand;
-      if (inst->instrc == "exit")
+      if (inst->instrc == "dump")
+	dump();
+      else if (inst->instrc == "exit")
 	{
 	  delete inst;
 	  return ;
 	}
-      (this->*_func[inst->instrc])();
+      else
+	(this->*_func[inst->instrc])();
       delete inst;
     }
 }
@@ -56,6 +59,8 @@ void Cpu::add()
   IOperand *nb1;
   IOperand *ret;
 
+  if (_stack.size() < 2)
+    throw(Exception("Not enough number to perform operation", __FILE__ ": line " TOSTRING(__LINE__)));
   _val = _stack.pop();
   nb1 = _val;
   _val = _stack.pop();
@@ -70,6 +75,8 @@ void Cpu::sub()
   IOperand *nb1;
   IOperand *ret;
 
+  if (_stack.size() < 2)
+    throw(Exception("Not enough number to perform operation", __FILE__ ": line " TOSTRING(__LINE__)));
   _val = _stack.pop();
   nb1 = _val;
   _val = _stack.pop();
@@ -85,6 +92,8 @@ void Cpu::mul()
   IOperand *nb1;
   IOperand *ret;
 
+  if (_stack.size() < 2)
+    throw(Exception("Not enough number to perform operation", __FILE__ ": line " TOSTRING(__LINE__)));
   _val = _stack.pop();
   nb1 = _val;
   _val = _stack.pop();
@@ -99,6 +108,8 @@ void Cpu::mod()
   IOperand *nb1;
   IOperand *ret;
 
+  if (_stack.size() < 2)
+    throw(Exception("Not enough number to perform operation", __FILE__ ": line " TOSTRING(__LINE__)));
   _val = _stack.pop();
   nb1 = _val;
   _val = _stack.pop();
@@ -113,6 +124,8 @@ void Cpu::div()
   IOperand *nb1;
   IOperand *ret;
 
+  if (_stack.size() < 2)
+    throw(Exception("Not enough number to perform operation", __FILE__ ": line " TOSTRING(__LINE__)));
   _val = _stack.pop();
   nb1 = _val;
   _val = _stack.pop();
@@ -132,12 +145,11 @@ void Cpu::pop()
   delete _stack.pop();
 }
 
-void Cpu::dump()
+void Cpu::dump() const
 {
-  std::list<IOperand *>::iterator it;
-  std::list<IOperand *>::iterator end;
+  std::list<IOperand *>::const_iterator it;
+  std::list<IOperand *>::const_iterator end = _stack.end();
 
-  end = _stack.end();
   for (it = _stack.begin();it != end;++it)
     std::cout << (*it)->toString() << std::endl;
 }
@@ -245,6 +257,8 @@ void Cpu::my_or()
   IOperand *nb1;
   IOperand *ret;
 
+  if (_stack.size() < 2)
+    throw(Exception("Not enough number to perform operation", __FILE__ ": line " TOSTRING(__LINE__)));
   _val = _stack.pop();
   nb1 = _val;
   _val = _stack.pop();
@@ -259,6 +273,8 @@ void Cpu::my_xor()
   IOperand *nb1;
   IOperand *ret;
 
+  if (_stack.size() < 2)
+    throw(Exception("Not enough number to perform operation", __FILE__ ": line " TOSTRING(__LINE__)));
   _val = _stack.pop();
   nb1 = _val;
   _val = _stack.pop();
@@ -273,6 +289,8 @@ void Cpu::my_and()
   IOperand *nb1;
   IOperand *ret;
 
+  if (_stack.size() < 2)
+    throw(Exception("Not enough number to perform operation", __FILE__ ": line " TOSTRING(__LINE__)));
   _val = _stack.pop();
   nb1 = _val;
   _val = _stack.pop();
